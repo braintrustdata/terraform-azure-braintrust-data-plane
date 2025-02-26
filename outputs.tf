@@ -67,18 +67,3 @@ output "api_url" {
   value       = module.services.api_url
   description = "The primary endpoint for the dataplane API. This is the value that should be entered into the braintrust dashboard under API URL."
 }
-
-output "clickhouse_secret_id" {
-  value       = try(module.clickhouse[0].clickhouse_secret_id, null)
-  description = "ID of the Clickhouse secret in Key Vault"
-}
-
-output "clickhouse_storage_account_name" {
-  value       = try(module.clickhouse[0].clickhouse_storage_account_name, null)
-  description = "Name of the Clickhouse storage account"
-}
-
-output "clickhouse_host" {
-  value       = try(module.clickhouse[0].clickhouse_instance_private_ip, null)
-  description = "Host of the Clickhouse instance"
-}

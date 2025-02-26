@@ -9,9 +9,6 @@ module "kms" {
 
 locals {
   key_vault_id = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
-  clickhouse_address = var.use_external_clickhouse_address != null ? var.use_external_clickhouse_address : (
-    var.enable_clickhouse ? module.clickhouse[0].clickhouse_instance_private_ip : null
-  )
 }
 
 resource "azurerm_resource_group" "main" {
@@ -103,9 +100,6 @@ module "services" {
   redis_port        = module.redis.redis_port
   redis_password    = module.redis.redis_primary_key
 
-  clickhouse_host      = local.clickhouse_address
-  clickhouse_secret_id = var.enable_clickhouse ? module.clickhouse[0].clickhouse_secret_id : null
-
   # Service configuration
   braintrust_org_name                = var.braintrust_org_name
   api_handler_scale_out_capacity     = var.api_handler_scale_out_capacity
@@ -131,22 +125,6 @@ module "services" {
     module.quarantine_vnet[0].private_subnet_2_id,
     module.quarantine_vnet[0].private_subnet_3_id
   ] : []
-
-  key_vault_id = local.key_vault_id
-}
-
-module "clickhouse" {
-  source = "./modules/clickhouse"
-  count  = var.enable_clickhouse ? 1 : 0
-
-  deployment_name              = var.deployment_name
-  resource_group_name          = azurerm_resource_group.main.name
-  location                     = var.location
-  clickhouse_instance_count    = var.use_external_clickhouse_address != null ? 0 : 1
-  clickhouse_vm_size           = var.clickhouse_vm_size
-  clickhouse_data_disk_size_gb = var.clickhouse_data_disk_size_gb
-  subnet_id                    = module.main_vnet.private_subnet_1_id
-  vnet_id                      = module.main_vnet.vnet_id
 
   key_vault_id = local.key_vault_id
 }

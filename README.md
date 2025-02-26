@@ -1,5 +1,7 @@
 # Braintrust Data Plane for Azure
 
+NOTE: This module is not production ready. It is a work in progress and actively being developed.
+
 This Terraform module deploys the Braintrust data plane on Azure. It creates all the necessary infrastructure to run Braintrust in your own Azure subscription.
 
 ## Architecture
@@ -11,7 +13,6 @@ This module creates the following resources:
 - Azure Cache for Redis
 - Azure App Service for API handlers
 - Azure Key Vault for secrets management
-- Virtual Machine for Clickhouse (optional)
 
 ## Usage
 
@@ -52,8 +53,7 @@ module "braintrust_data_plane" {
 | redis_capacity | Capacity for the Azure Cache for Redis instance | `number` | `1` | no |
 | redis_version | Redis engine version | `string` | `"6"` | no |
 | api_handler_scale_out_capacity | The number of API Handler instances to provision | `number` | `0` | no |
-| enable_clickhouse | Enable Clickhouse for faster analytics | `bool` | `false` | no |
-| clickhouse_vm_size | The VM size to use for the Clickhouse instance | `string` | `"Standard_D4s_v3"` | no |
+
 
 ## Outputs
 

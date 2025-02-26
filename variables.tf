@@ -127,28 +127,3 @@ variable "custom_certificate_id" {
   type        = string
   default     = null
 }
-
-## Clickhouse
-variable "enable_clickhouse" {
-  type        = bool
-  description = "Enable Clickhouse for faster analytics"
-  default     = false
-}
-
-variable "use_external_clickhouse_address" {
-  type        = string
-  description = "Do not change this unless instructed by Braintrust. If set, the domain name or IP of the external Clickhouse instance will be used and no internal instance will be created."
-  default     = null
-}
-
-variable "clickhouse_data_disk_size_gb" {
-  type        = number
-  description = "The size of the data disk to use for Clickhouse in GB"
-  default     = 100
-}
-
-variable "clickhouse_vm_size" {
-  type        = string
-  description = "The VM size to use for the Clickhouse instance"
-  default     = "Standard_D4s_v3"
-}
