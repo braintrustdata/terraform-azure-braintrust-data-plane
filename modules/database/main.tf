@@ -1,12 +1,16 @@
+locals {
+  db_name = "${var.deployment_name}-database"
+}
+
 resource "azurerm_postgresql_flexible_server" "main" {
-  name                = "${var.deployment_name}-main"
+  name                = local.db_name
   resource_group_name = var.resource_group_name
 
   location = var.location
   version  = var.postgres_version
 
   public_network_access_enabled = false
-  delegated_subnet_id           = var.subnet_id
+  delegated_subnet_id           = azurerm_subnet.main.id
 
   administrator_login    = "postgres"
   administrator_password = azurerm_key_vault_secret.postgres_password.value
@@ -31,10 +35,6 @@ resource "azurerm_postgresql_flexible_server" "main" {
       high_availability[0].standby_availability_zone
     ]
   }
-
-  tags = {
-    deployment = var.deployment_name
-  }
 }
 
 resource "azurerm_postgresql_flexible_server_database" "main" {
@@ -45,7 +45,7 @@ resource "azurerm_postgresql_flexible_server_database" "main" {
 }
 
 resource "azurerm_key_vault_secret" "postgres_password" {
-  name         = "${var.deployment_name}-database-password"
+  name         = "${local.db_name}-password"
   value        = random_password.postgres.result
   key_vault_id = var.key_vault_id
 }
