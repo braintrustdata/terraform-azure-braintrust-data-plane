@@ -30,16 +30,17 @@ variable "postgres_storage_mb" {
 variable "postgres_version" {
   description = "PostgreSQL engine version for the Azure Database for PostgreSQL instance."
   type        = string
+  default     = "16"
 }
 
 variable "vnet_name" {
   type        = string
-  description = "Name of the virtual network"
+  description = "Name of the virtual network to deploy the database into"
 }
 
 variable "subnet_cidr" {
   type        = string
-  description = "CIDR block for the subnet"
+  description = "CIDR block for the subnet to deploy the database into"
 }
 
 variable "key_vault_id" {

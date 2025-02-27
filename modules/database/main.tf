@@ -30,6 +30,16 @@ resource "azurerm_postgresql_flexible_server" "main" {
     mode = "SameZone"
   }
 
+  customer_managed_key {
+    key_vault_key_id                  = var.key_vault_key_id
+    primary_user_assigned_identity_id = azurerm_user_assigned_identity.postgres_cmk.id
+  }
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.postgres_cmk.id]
+  }
+
   lifecycle {
     ignore_changes = [
       high_availability[0].standby_availability_zone
@@ -54,4 +64,22 @@ resource "random_password" "postgres" {
   length           = 16
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "azurerm_user_assigned_identity" "postgres_cmk" {
+  name                = "${local.db_name}-cmk-identity"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+}
+
+resource "azurerm_key_vault_access_policy" "postgres_cmk" {
+  key_vault_id = var.key_vault_id
+  tenant_id    = azurerm_user_assigned_identity.postgres_cmk.tenant_id
+  object_id    = azurerm_user_assigned_identity.postgres_cmk.principal_id
+
+  key_permissions = [
+    "Get",
+    "WrapKey",
+    "UnwrapKey"
+  ]
 }
