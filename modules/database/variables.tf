@@ -33,22 +33,12 @@ variable "postgres_version" {
   default     = "16"
 }
 
-variable "vnet_name" {
+variable "subnet_id" {
   type        = string
-  description = "Name of the virtual network to deploy the database into"
-}
-
-variable "subnet_cidr" {
-  type        = string
-  description = "CIDR block for the subnet to deploy the database into"
+  description = "ID of the subnet to deploy the database into"
 }
 
 variable "key_vault_id" {
+  description = "The ID of the Key Vault key to use for database encryption"
   type        = string
-  description = "ID of the Key Vault"
-}
-
-variable "allowed_cidrs" {
-  type        = list(string)
-  description = "List of CIDRs to allow access to the database"
 }

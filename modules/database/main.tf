@@ -10,7 +10,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   version  = var.postgres_version
 
   public_network_access_enabled = false
-  delegated_subnet_id           = azurerm_subnet.main.id
+  delegated_subnet_id           = var.subnet_id
 
   administrator_login    = "postgres"
   administrator_password = azurerm_key_vault_secret.postgres_password.value
@@ -31,7 +31,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   }
 
   customer_managed_key {
-    key_vault_key_id                  = var.key_vault_key_id
+    key_vault_key_id                  = var.key_vault_id
     primary_user_assigned_identity_id = azurerm_user_assigned_identity.postgres_cmk.id
   }
 
