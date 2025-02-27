@@ -33,12 +33,17 @@ variable "vnet_id" {
   description = "ID of the virtual network"
 }
 
-variable "subnet_ids" {
-  type        = list(string)
-  description = "List of subnet IDs for the database"
+variable "subnet_id" {
+  type        = string
+  description = "ID of the subnet that the database will use"
 }
 
 variable "key_vault_id" {
   type        = string
   description = "ID of the Key Vault"
+}
+
+variable "postgres_storage_tier" {
+  type        = string
+  description = "Storage tier for the Azure Database for PostgreSQL instance."
 }

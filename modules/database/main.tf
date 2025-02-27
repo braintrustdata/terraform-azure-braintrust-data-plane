@@ -1,22 +1,35 @@
-resource "random_password" "postgres" {
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-}
-
 resource "azurerm_postgresql_flexible_server" "main" {
-  name                   = "psql-${var.deployment_name}"
-  resource_group_name    = var.resource_group_name
-  location               = var.location
-  version                = var.postgres_version
-  administrator_login    = "braintrust"
-  administrator_password = random_password.postgres.result
-  storage_mb             = var.postgres_storage_mb
-  sku_name               = var.postgres_sku_name
-  zone                   = "1"
+  name                = "${var.deployment_name}-main"
+  resource_group_name = var.resource_group_name
+
+  location = var.location
+  version  = var.postgres_version
+
+  public_network_access_enabled = false
+  delegated_subnet_id           = var.subnet_id
+
+  administrator_login    = "postgres"
+  administrator_password = azurerm_key_vault_secret.postgres_password.value
+
+  sku_name          = var.postgres_sku_name
+  auto_grow_enabled = true
+  storage_mb        = var.postgres_storage_mb
+  storage_tier      = var.postgres_storage_tier
+
+  backup_retention_days = 7
+
+  authentication {
+    password_auth_enabled = true
+  }
 
   high_availability {
-    mode = "ZoneRedundant"
+    mode = "SameZone"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      high_availability[0].standby_availability_zone
+    ]
   }
 
   tags = {
@@ -31,15 +44,14 @@ resource "azurerm_postgresql_flexible_server_database" "main" {
   collation = "en_US.utf8"
 }
 
-resource "azurerm_postgresql_flexible_server_firewall_rule" "azure_services" {
-  name             = "AllowAzureServices"
-  server_id        = azurerm_postgresql_flexible_server.main.id
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
-}
-
 resource "azurerm_key_vault_secret" "postgres_password" {
-  name         = "postgres-password"
+  name         = "${var.deployment_name}-database-password"
   value        = random_password.postgres.result
   key_vault_id = var.key_vault_id
+}
+
+resource "random_password" "postgres" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
 }

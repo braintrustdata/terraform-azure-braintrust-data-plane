@@ -13,13 +13,7 @@ output "postgres_database_username" {
   description = "Username for the PostgreSQL database"
 }
 
-output "postgres_database_password" {
-  value       = random_password.postgres.result
-  description = "Password for the PostgreSQL database"
-  sensitive   = true
-}
-
-output "postgres_database_port" {
-  value       = 5432
-  description = "Port for the PostgreSQL database"
+output "postgres_password_secret_id" {
+  value       = azurerm_key_vault_secret.postgres_password.id
+  description = "ID of the Key Vault secret for the PostgreSQL database"
 }
