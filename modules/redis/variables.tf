@@ -37,3 +37,8 @@ variable "redis_version" {
   type        = string
   description = "Redis engine version"
 }
+
+variable "virtual_network_id" {
+  type        = string
+  description = "ID of the virtual network"
+}
