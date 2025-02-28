@@ -43,3 +43,15 @@ resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
   virtual_network_id    = var.virtual_network_id
   resource_group_name   = var.resource_group_name
 }
+
+resource "azurerm_key_vault_secret" "redis_password" {
+  name         = "redis-password"
+  value        = azurerm_redis_cache.redis.primary_access_key
+  key_vault_id = var.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "redis_connection_string" {
+  name         = "redis-connection-string"
+  value        = "rediss://:${azurerm_redis_cache.redis.primary_access_key}@${azurerm_redis_cache.redis.hostname}:${azurerm_redis_cache.redis.ssl_port}"
+  key_vault_id = var.key_vault_id
+}
