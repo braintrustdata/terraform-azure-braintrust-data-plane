@@ -1,3 +1,8 @@
+locals {
+  gateway_subnet_cidr = cidrsubnets(var.vnet_address_space_cidr, 2)[1]
+
+}
+
 variable "deployment_name" {
   type        = string
   description = "Name of the Braintrust deployment"
@@ -18,27 +23,22 @@ variable "vnet_name" {
   description = "Name of the virtual network"
 }
 
-variable "vnet_address_space" {
+variable "vnet_address_space_cidr" {
   type        = string
-  description = "Address space for the VNet"
+  description = "CIDR block for the VNet"
 }
 
-variable "public_subnet_cidr" {
+variable "gateway_subnet_cidr" {
   type        = string
-  description = "CIDR block for the public subnet"
+  description = "CIDR block for the gateway subnet"
 }
 
-variable "private_subnet_1_cidr" {
+variable "database_subnet_cidr" {
   type        = string
-  description = "CIDR block for the first private subnet"
+  description = "CIDR block for the database subnet"
 }
 
-variable "private_subnet_2_cidr" {
+variable "services_subnet_cidr" {
   type        = string
-  description = "CIDR block for the second private subnet"
-}
-
-variable "private_subnet_3_cidr" {
-  type        = string
-  description = "CIDR block for the third private subnet"
+  description = "CIDR block for the services subnet"
 }

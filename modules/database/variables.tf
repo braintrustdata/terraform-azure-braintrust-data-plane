@@ -18,6 +18,10 @@ variable "postgres_sku_name" {
   type        = string
 }
 
+variable "postgres_storage_tier" {
+  type        = string
+  description = "Storage tier for the Azure Database for PostgreSQL instance."
+}
 variable "postgres_storage_mb" {
   description = "Storage size (in MB) for the Azure Database for PostgreSQL instance."
   type        = number
@@ -26,19 +30,15 @@ variable "postgres_storage_mb" {
 variable "postgres_version" {
   description = "PostgreSQL engine version for the Azure Database for PostgreSQL instance."
   type        = string
+  default     = "16"
 }
 
-variable "vnet_id" {
+variable "subnet_id" {
   type        = string
-  description = "ID of the virtual network"
-}
-
-variable "subnet_ids" {
-  type        = list(string)
-  description = "List of subnet IDs for the database"
+  description = "ID of the subnet to deploy the database into"
 }
 
 variable "key_vault_id" {
+  description = "The ID of the Key Vault key to use for database encryption"
   type        = string
-  description = "ID of the Key Vault"
 }

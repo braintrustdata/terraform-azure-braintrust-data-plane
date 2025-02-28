@@ -1,111 +1,46 @@
 resource "azurerm_virtual_network" "main" {
-  name                = "vnet-${var.deployment_name}-${var.vnet_name}"
+  name                = "${var.deployment_name}-${var.vnet_name}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  address_space       = [var.vnet_address_space]
+  address_space       = [var.vnet_address_space_cidr]
+}
 
-  tags = {
-    deployment = var.deployment_name
+resource "azurerm_subnet" "database" {
+  name                 = "${var.deployment_name}-database"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = [var.database_subnet_cidr]
+  service_endpoints    = ["Microsoft.Storage"]
+
+  delegation {
+    name = "fs"
+    service_delegation {
+      name = "Microsoft.DBforPostgreSQL/flexibleServers"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+    }
   }
 }
 
-resource "azurerm_subnet" "public" {
-  name                 = "snet-${var.deployment_name}-${var.vnet_name}-public"
+resource "azurerm_subnet" "gateway-lb" {
+  name                 = "${var.deployment_name}-gateway-lb"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.public_subnet_cidr]
+  address_prefixes     = [var.gateway_subnet_cidr]
 }
 
-resource "azurerm_subnet" "private_1" {
-  name                 = "snet-${var.deployment_name}-${var.vnet_name}-private-1"
+resource "azurerm_subnet" "services" {
+  name                 = "${var.deployment_name}-services"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.private_subnet_1_cidr]
-  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.KeyVault", "Microsoft.Web"]
+  address_prefixes     = [var.services_subnet_cidr]
 }
 
-resource "azurerm_subnet" "private_2" {
-  name                 = "snet-${var.deployment_name}-${var.vnet_name}-private-2"
+resource "azurerm_subnet" "redis" {
+  name                 = "${var.deployment_name}-redis"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.private_subnet_2_cidr]
-  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.KeyVault", "Microsoft.Web"]
+  address_prefixes     = [var.redis_subnet_cidr]
 }
 
-resource "azurerm_subnet" "private_3" {
-  name                 = "snet-${var.deployment_name}-${var.vnet_name}-private-3"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.private_subnet_3_cidr]
-  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.KeyVault", "Microsoft.Web"]
-}
-
-resource "azurerm_network_security_group" "default" {
-  name                = "nsg-${var.deployment_name}-${var.vnet_name}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  tags = {
-    deployment = var.deployment_name
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "public" {
-  subnet_id                 = azurerm_subnet.public.id
-  network_security_group_id = azurerm_network_security_group.default.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "private_1" {
-  subnet_id                 = azurerm_subnet.private_1.id
-  network_security_group_id = azurerm_network_security_group.default.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "private_2" {
-  subnet_id                 = azurerm_subnet.private_2.id
-  network_security_group_id = azurerm_network_security_group.default.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "private_3" {
-  subnet_id                 = azurerm_subnet.private_3.id
-  network_security_group_id = azurerm_network_security_group.default.id
-}
-
-resource "azurerm_route_table" "public" {
-  name                = "rt-${var.deployment_name}-${var.vnet_name}-public"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  tags = {
-    deployment = var.deployment_name
-  }
-}
-
-resource "azurerm_route_table" "private" {
-  name                = "rt-${var.deployment_name}-${var.vnet_name}-private"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  tags = {
-    deployment = var.deployment_name
-  }
-}
-
-resource "azurerm_subnet_route_table_association" "public" {
-  subnet_id      = azurerm_subnet.public.id
-  route_table_id = azurerm_route_table.public.id
-}
-
-resource "azurerm_subnet_route_table_association" "private_1" {
-  subnet_id      = azurerm_subnet.private_1.id
-  route_table_id = azurerm_route_table.private.id
-}
-
-resource "azurerm_subnet_route_table_association" "private_2" {
-  subnet_id      = azurerm_subnet.private_2.id
-  route_table_id = azurerm_route_table.private.id
-}
-
-resource "azurerm_subnet_route_table_association" "private_3" {
-  subnet_id      = azurerm_subnet.private_3.id
-  route_table_id = azurerm_route_table.private.id
-}
