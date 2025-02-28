@@ -33,6 +33,11 @@ variable "postgres_version" {
   default     = "16"
 }
 
+variable "vnet_id" {
+  type        = string
+  description = "ID of the virtual network"
+}
+
 variable "subnet_id" {
   type        = string
   description = "ID of the subnet to deploy the database into"
