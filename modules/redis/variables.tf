@@ -13,9 +13,9 @@ variable "location" {
   description = "Azure region to deploy resources to"
 }
 
-variable "subnet_id" {
+variable "private_endpoint_subnet_id" {
   type        = string
-  description = "ID of the subnet for Redis"
+  description = "ID of the subnet for Redis private endpoint"
 }
 
 variable "redis_sku_name" {

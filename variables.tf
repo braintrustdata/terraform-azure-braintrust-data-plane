@@ -29,35 +29,53 @@ variable "key_vault_id" {
 }
 
 ## NETWORKING
-variable "vnet_address_space" {
+variable "vnet_address_space_cidr" {
   type        = string
-  default     = "10.175.0.0/16"
   description = "Address space for the VNet"
+  default     = null
 }
 
-variable "enable_quarantine_vnet" {
-  type        = bool
-  description = "Enable the Quarantine VNet to run user defined functions in an isolated environment. If disabled, user defined functions will not be available."
-  default     = true
-}
-
-variable "quarantine_vnet_address_space" {
+variable "services_subnet_cidr" {
+  description = "CIDR block for the services subnet. Leave blank to auto-calculate one."
   type        = string
-  default     = "10.176.0.0/16"
-  description = "Address space for the Quarantined VNet"
+  default     = null
+}
+
+variable "database_subnet_cidr" {
+  description = "CIDR block for the database subnet. Leave blank to auto-calculate one."
+  type        = string
+  default     = null
+}
+
+variable "gateway_subnet_cidr" {
+  description = "CIDR block for the gateway subnet. Leave blank to auto-calculate one."
+  type        = string
+  default     = null
+}
+
+variable "redis_subnet_cidr" {
+  description = "CIDR block for the Redis subnet. Leave blank to auto-calculate one."
+  type        = string
+  default     = null
 }
 
 ## Database
 variable "postgres_sku_name" {
   description = "SKU name for the Azure Database for PostgreSQL instance."
   type        = string
-  default     = "GP_Gen5_4"
+  default     = "MO_Standard_E2ds_v5"
 }
 
 variable "postgres_storage_mb" {
   description = "Storage size (in MB) for the Azure Database for PostgreSQL instance."
   type        = number
-  default     = 102400 # 100 GB
+  default     = 131072
+}
+
+variable "postgres_storage_tier" {
+  description = "Storage tier for the Azure Database for PostgreSQL instance."
+  type        = string
+  default     = "P20"
 }
 
 variable "postgres_version" {
@@ -90,3 +108,7 @@ variable "redis_version" {
   type        = string
   default     = "6"
 }
+
+
+
+

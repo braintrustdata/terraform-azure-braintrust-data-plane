@@ -25,6 +25,11 @@ variable "postgres_storage_tier" {
 variable "postgres_storage_mb" {
   description = "Storage size (in MB) for the Azure Database for PostgreSQL instance."
   type        = number
+  validation {
+    # Azure enforces this, not us.
+    condition     = contains([32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4193280, 4194304, 8388608, 16777216, 33553408], var.postgres_storage_mb)
+    error_message = "Storage size must be one of: 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4193280, 4194304, 8388608, 16777216, or 33553408 MB."
+  }
 }
 
 variable "postgres_version" {
@@ -41,6 +46,11 @@ variable "vnet_id" {
 variable "subnet_id" {
   type        = string
   description = "ID of the subnet to deploy the database into"
+}
+
+variable "private_endpoint_subnet_id" {
+  type        = string
+  description = "ID of the subnet to create the private endpoint in"
 }
 
 variable "key_vault_id" {
