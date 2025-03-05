@@ -1,10 +1,10 @@
 locals {
   default_vnet_address_space           = "10.175.0.0/20"                                     # 4096 IP addresses
-  default_services_subnet_cidr         = cidrsubnet(local.default_vnet_address_space, 2, 0)  # 1024 IP addresses
-  default_database_subnet_cidr         = cidrsubnet(local.default_vnet_address_space, 7, 8)  # 32 IP addresses
-  default_gateway_subnet_cidr          = cidrsubnet(local.default_vnet_address_space, 7, 9)  # 32 IP addresses
-  default_redis_subnet_cidr            = cidrsubnet(local.default_vnet_address_space, 7, 10) # 32 IP addresses
-  default_private_endpoint_subnet_cidr = cidrsubnet(local.default_vnet_address_space, 7, 11) # 32 IP addresses
+  default_services_subnet_cidr         = cidrsubnet(local.default_vnet_address_space, 2, 0)  # 1024 IP addresses (x.x.0.0/22)
+  default_database_subnet_cidr         = cidrsubnet(local.default_vnet_address_space, 7, 32) # 32 IP addresses (x.x.4.0/27)
+  default_gateway_subnet_cidr          = cidrsubnet(local.default_vnet_address_space, 7, 33) # 32 IP addresses (x.x.4.32/27)
+  default_redis_subnet_cidr            = cidrsubnet(local.default_vnet_address_space, 7, 34) # 32 IP addresses (x.x.4.64/27)
+  default_private_endpoint_subnet_cidr = cidrsubnet(local.default_vnet_address_space, 7, 35) # 32 IP addresses (x.x.4.96/27)
 
   vnet_address_space_cidr      = var.vnet_address_space_cidr != null ? var.vnet_address_space_cidr : local.default_vnet_address_space
   services_subnet_cidr         = var.services_subnet_cidr != null ? var.services_subnet_cidr : local.default_services_subnet_cidr
