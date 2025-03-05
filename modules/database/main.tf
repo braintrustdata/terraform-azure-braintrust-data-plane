@@ -2,6 +2,22 @@ locals {
   db_name = "${var.deployment_name}-database"
 }
 
+resource "azurerm_key_vault_key" "postgres_cmk" {
+  name         = "${local.db_name}-cmk"
+  key_vault_id = var.key_vault_id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
+}
+
 resource "azurerm_postgresql_flexible_server" "main" {
   name                = local.db_name
   resource_group_name = var.resource_group_name
@@ -31,7 +47,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   }
 
   customer_managed_key {
-    key_vault_key_id                  = var.key_vault_id
+    key_vault_key_id                  = azurerm_key_vault_key.postgres_cmk.id
     primary_user_assigned_identity_id = azurerm_user_assigned_identity.postgres_cmk.id
   }
 
@@ -80,6 +96,7 @@ resource "azurerm_key_vault_access_policy" "postgres_cmk" {
   key_permissions = [
     "Get",
     "WrapKey",
-    "UnwrapKey"
+    "UnwrapKey",
+    "GetRotationPolicy"
   ]
 }

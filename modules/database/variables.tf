@@ -54,6 +54,6 @@ variable "private_endpoint_subnet_id" {
 }
 
 variable "key_vault_id" {
-  description = "The ID of the Key Vault key to use for database encryption"
+  description = "The ID of the Key Vault key to use for database encryption and secrets"
   type        = string
 }

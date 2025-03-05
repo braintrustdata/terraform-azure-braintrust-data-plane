@@ -1,13 +1,13 @@
 resource "azurerm_redis_cache" "redis" {
-  name                = "${var.deployment_name}-redis"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  capacity            = var.redis_capacity
-  family              = var.redis_family
-  sku_name            = var.redis_sku_name
-  minimum_tls_version = "1.2"
-  redis_version       = var.redis_version
+  name                          = "${var.deployment_name}-redis"
+  location                      = var.location
+  resource_group_name           = var.resource_group_name
+  public_network_access_enabled = false
+  capacity                      = var.redis_capacity
+  family                        = var.redis_family
+  sku_name                      = var.redis_sku_name
+  minimum_tls_version           = "1.2"
+  redis_version                 = var.redis_version
 }
 
 

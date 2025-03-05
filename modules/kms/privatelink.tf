@@ -13,7 +13,7 @@ resource "azurerm_private_endpoint" "key_vault" {
 
   private_dns_zone_group {
     name                 = "default"
-    private_dns_zone_ids = [azurerm_private_dns_zone.key_vault[0].id]
+    private_dns_zone_ids = [azurerm_private_dns_zone.key_vault.id]
   }
 }
 
@@ -25,6 +25,6 @@ resource "azurerm_private_dns_zone" "key_vault" {
 resource "azurerm_private_dns_zone_virtual_network_link" "key_vault" {
   name                  = "${var.deployment_name}-kv-pdzvnetlink"
   resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.key_vault[0].name
+  private_dns_zone_name = azurerm_private_dns_zone.key_vault.name
   virtual_network_id    = var.virtual_network_id
 }
