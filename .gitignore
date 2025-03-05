@@ -29,9 +29,12 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Ignore actual provider and backend configuration
-providers.tf
-terraform.tf
+# Do not commit the terraform.tf and provider.tf files. This module should not have concrete
+# backend or provider configs. Users will set that up themselves.
+/terraform.tf
+/provider.tf
+/modules/*/terraform.tf
+/modules/*/provider.tf
 
 # Ignore IDE files
 .idea/
