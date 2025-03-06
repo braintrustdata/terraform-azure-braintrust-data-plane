@@ -12,7 +12,7 @@ resource "azurerm_private_endpoint" "key_vault" {
   }
 
   private_dns_zone_group {
-    name                 = "default"
+    name                 = var.deployment_name
     private_dns_zone_ids = [azurerm_private_dns_zone.key_vault.id]
   }
 }
