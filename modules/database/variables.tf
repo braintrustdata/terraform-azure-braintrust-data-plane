@@ -43,17 +43,12 @@ variable "vnet_id" {
   description = "ID of the virtual network"
 }
 
-variable "subnet_id" {
-  type        = string
-  description = "ID of the subnet to deploy the database into"
-}
-
 variable "private_endpoint_subnet_id" {
   type        = string
   description = "ID of the subnet to create the private endpoint in"
 }
 
 variable "key_vault_id" {
-  description = "The ID of the Key Vault key to use for database encryption and secrets"
+  description = "The ID of the Key Vault to use for database encryption and secrets"
   type        = string
 }

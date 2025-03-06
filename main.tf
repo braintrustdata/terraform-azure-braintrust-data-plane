@@ -46,7 +46,6 @@ module "database" {
   postgres_storage_tier = var.postgres_storage_tier
 
   vnet_id                    = module.main_vnet.vnet_id
-  subnet_id                  = module.main_vnet.database_subnet_id
   private_endpoint_subnet_id = module.main_vnet.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
