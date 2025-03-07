@@ -23,13 +23,6 @@ resource "azurerm_subnet" "database" {
   }
 }
 
-resource "azurerm_subnet" "gateway-lb" {
-  name                 = "${var.deployment_name}-gateway-lb"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [local.gateway_subnet_cidr]
-}
-
 resource "azurerm_subnet" "services" {
   name                 = "${var.deployment_name}-services"
   resource_group_name  = var.resource_group_name
@@ -37,18 +30,6 @@ resource "azurerm_subnet" "services" {
   address_prefixes     = [local.services_subnet_cidr]
 }
 
-resource "azurerm_subnet" "redis" {
-  name                 = "${var.deployment_name}-redis"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [local.redis_subnet_cidr]
-}
-
-resource "azurerm_network_security_group" "database" {
-  name                = "${var.deployment_name}-database-nsg"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-}
 
 resource "azurerm_network_security_rule" "services_to_database" {
   name                        = "services-to-database"
