@@ -41,20 +41,8 @@ variable "services_subnet_cidr" {
   default     = null
 }
 
-variable "database_subnet_cidr" {
-  description = "CIDR block for the database subnet. Leave blank to auto-calculate one."
-  type        = string
-  default     = null
-}
-
-variable "gateway_subnet_cidr" {
-  description = "CIDR block for the gateway subnet. Leave blank to auto-calculate one."
-  type        = string
-  default     = null
-}
-
-variable "redis_subnet_cidr" {
-  description = "CIDR block for the Redis subnet. Leave blank to auto-calculate one."
+variable "private_endpoint_subnet_cidr" {
+  description = "CIDR block for the private endpoint subnet. Leave blank to auto-calculate one."
   type        = string
   default     = null
 }

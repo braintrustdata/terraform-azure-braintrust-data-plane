@@ -13,11 +13,6 @@ output "vnet_address_space" {
   description = "Address space of the virtual network"
 }
 
-output "gateway_subnet_id" {
-  value       = azurerm_subnet.gateway-lb.id
-  description = "ID of the gateway subnet"
-}
-
 output "services_subnet_id" {
   value       = azurerm_subnet.services.id
   description = "ID of the services subnet"

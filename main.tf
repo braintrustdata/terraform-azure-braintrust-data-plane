@@ -25,12 +25,10 @@ module "main_vnet" {
   resource_group_name = azurerm_resource_group.main.name
   location            = var.location
 
-  vnet_name               = "main"
-  vnet_address_space_cidr = var.vnet_address_space_cidr
-  database_subnet_cidr    = var.database_subnet_cidr
-  services_subnet_cidr    = var.services_subnet_cidr
-  gateway_subnet_cidr     = var.gateway_subnet_cidr
-  redis_subnet_cidr       = var.redis_subnet_cidr
+  vnet_name                    = "main"
+  vnet_address_space_cidr      = var.vnet_address_space_cidr
+  services_subnet_cidr         = var.services_subnet_cidr
+  private_endpoint_subnet_cidr = var.private_endpoint_subnet_cidr
 }
 
 module "database" {
