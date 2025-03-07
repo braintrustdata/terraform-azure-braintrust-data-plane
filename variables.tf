@@ -29,6 +29,20 @@ variable "key_vault_id" {
 }
 
 ## NETWORKING
+
+variable "existing_vnet" {
+  type = object({
+    id                         = string
+    name                       = string
+    database_subnet_id         = string
+    services_subnet_id         = string
+    gateway_subnet_id          = string
+    redis_subnet_id            = string
+    private_endpoint_subnet_id = string
+  })
+}
+
+
 variable "vnet_address_space_cidr" {
   type        = string
   description = "Address space for the VNet"
