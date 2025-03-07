@@ -28,3 +28,14 @@ resource "azurerm_private_endpoint" "main" {
     is_manual_connection           = false
   }
 }
+
+resource "azurerm_application_security_group" "main_db_endpoint" {
+  name                = local.db_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_endpoint_application_security_group_association" "main_db_endpoint" {
+  private_endpoint_id           = azurerm_private_endpoint.main.id
+  application_security_group_id = azurerm_application_security_group.main_db_endpoint.id
+}

@@ -30,3 +30,13 @@ resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
   virtual_network_id    = var.virtual_network_id
   resource_group_name   = var.resource_group_name
 }
+resource "azurerm_application_security_group" "main_redis_endpoint" {
+  name                = "${var.deployment_name}-redis"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_endpoint_application_security_group_association" "main_redis_endpoint" {
+  private_endpoint_id           = azurerm_private_endpoint.redis.id
+  application_security_group_id = azurerm_application_security_group.main_redis_endpoint.id
+}

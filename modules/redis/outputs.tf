@@ -24,3 +24,8 @@ output "redis_connection_string" {
   value       = "rediss://:${azurerm_redis_cache.redis.primary_access_key}@${azurerm_redis_cache.redis.hostname}:${azurerm_redis_cache.redis.ssl_port}"
   sensitive   = true
 }
+
+output "redis_application_security_group_name" {
+  value       = azurerm_application_security_group.main_redis_endpoint.name
+  description = "Name of the redis application security group"
+}
