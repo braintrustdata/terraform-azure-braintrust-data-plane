@@ -22,9 +22,3 @@ variable "virtual_network_id" {
   type        = string
   description = "ID of the virtual network to link with the private DNS zone"
 }
-
-variable "allow_access_subnet_ids" {
-  type        = list(string)
-  description = "List of subnet IDs to allow access to the key vault"
-  default     = []
-}
