@@ -1,25 +1,17 @@
 resource "azurerm_key_vault" "main" {
-  name                        = "kv-${var.deployment_name}"
-  location                    = var.location
-  resource_group_name         = var.resource_group_name
+  name                = "${var.deployment_name}-kv"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+
+  sku_name = "standard"
+
   enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Get", "List", "Create", "Delete", "Update", "Recover", "Purge", "GetRotationPolicy", "SetRotationPolicy"
-    ]
-
-    secret_permissions = [
-      "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-    ]
-  }
+  purge_protection_enabled    = true
+  # Required for Terraform to work. Also, the default.
+  public_network_access_enabled = true
+  enable_rbac_authorization     = true
 
   tags = {
     deployment = var.deployment_name

@@ -10,7 +10,6 @@ resource "azurerm_postgresql_flexible_server" "main" {
   version  = var.postgres_version
 
   public_network_access_enabled = false
-  delegated_subnet_id           = var.subnet_id
 
   administrator_login    = "postgres"
   administrator_password = azurerm_key_vault_secret.postgres_password.value
@@ -31,18 +30,19 @@ resource "azurerm_postgresql_flexible_server" "main" {
   }
 
   customer_managed_key {
-    key_vault_key_id                  = var.key_vault_id
-    primary_user_assigned_identity_id = azurerm_user_assigned_identity.postgres_cmk.id
+    key_vault_key_id                  = azurerm_key_vault_key.postgres_cmk.id
+    primary_user_assigned_identity_id = azurerm_user_assigned_identity.main.id
   }
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.postgres_cmk.id]
+    identity_ids = [azurerm_user_assigned_identity.main.id]
   }
 
   lifecycle {
     ignore_changes = [
-      high_availability[0].standby_availability_zone
+      high_availability[0].standby_availability_zone,
+      zone
     ]
   }
 }
@@ -56,30 +56,29 @@ resource "azurerm_postgresql_flexible_server_database" "main" {
 
 resource "azurerm_key_vault_secret" "postgres_password" {
   name         = "${local.db_name}-password"
-  value        = random_password.postgres.result
+  value        = random_password.postgres_password.result
   key_vault_id = var.key_vault_id
 }
 
-resource "random_password" "postgres" {
+resource "random_password" "postgres_password" {
   length           = 16
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
-resource "azurerm_user_assigned_identity" "postgres_cmk" {
-  name                = "${local.db_name}-cmk-identity"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-}
 
-resource "azurerm_key_vault_access_policy" "postgres_cmk" {
+resource "azurerm_key_vault_key" "postgres_cmk" {
+  name         = "${local.db_name}-cmk"
   key_vault_id = var.key_vault_id
-  tenant_id    = azurerm_user_assigned_identity.postgres_cmk.tenant_id
-  object_id    = azurerm_user_assigned_identity.postgres_cmk.principal_id
+  key_type     = "RSA"
+  key_size     = 4096
 
-  key_permissions = [
-    "Get",
-    "WrapKey",
-    "UnwrapKey"
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
   ]
 }

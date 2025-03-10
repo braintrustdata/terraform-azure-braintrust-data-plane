@@ -13,37 +13,22 @@ output "vnet_address_space" {
   description = "Address space of the virtual network"
 }
 
-output "public_subnet_id" {
-  value       = azurerm_subnet.public.id
-  description = "ID of the public subnet"
+output "services_subnet_id" {
+  value       = azurerm_subnet.services.id
+  description = "ID of the services subnet"
 }
 
-output "private_subnet_1_id" {
-  value       = azurerm_subnet.private_1.id
-  description = "ID of the first private subnet"
+output "services_network_security_group_id" {
+  value       = azurerm_network_security_group.services.id
+  description = "ID of the services network security group"
 }
 
-output "private_subnet_2_id" {
-  value       = azurerm_subnet.private_2.id
-  description = "ID of the second private subnet"
+output "private_endpoint_subnet_id" {
+  value       = azurerm_subnet.private_endpoint.id
+  description = "ID of the private endpoint subnet"
 }
 
-output "private_subnet_3_id" {
-  value       = azurerm_subnet.private_3.id
-  description = "ID of the third private subnet"
-}
-
-output "default_nsg_id" {
-  value       = azurerm_network_security_group.default.id
-  description = "ID of the default network security group"
-}
-
-output "public_route_table_id" {
-  value       = azurerm_route_table.public.id
-  description = "ID of the public route table"
-}
-
-output "private_route_table_id" {
-  value       = azurerm_route_table.private.id
-  description = "ID of the private route table"
+output "private_endpoint_network_security_group_id" {
+  value       = azurerm_network_security_group.private_endpoint.id
+  description = "ID of the private endpoint subnet's network security group"
 }

@@ -12,3 +12,13 @@ variable "location" {
   type        = string
   description = "Azure region to deploy resources to"
 }
+
+variable "private_endpoint_subnet_id" {
+  type        = string
+  description = "ID of the subnet to create the private endpoint in"
+}
+
+variable "virtual_network_id" {
+  type        = string
+  description = "ID of the virtual network to link with the private DNS zone"
+}
