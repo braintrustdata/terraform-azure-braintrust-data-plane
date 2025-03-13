@@ -1,5 +1,6 @@
 locals {
-  db_name = "${var.deployment_name}-database"
+  db_name    = "${var.deployment_name}-database"
+  pg_db_name = "braintrust"
 }
 
 resource "azurerm_postgresql_flexible_server" "main" {
@@ -48,7 +49,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "main" {
-  name      = "braintrust"
+  name      = local.pg_db_name
   server_id = azurerm_postgresql_flexible_server.main.id
   charset   = "UTF8"
   collation = "en_US.utf8"

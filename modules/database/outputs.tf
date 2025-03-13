@@ -8,6 +8,11 @@ output "postgres_database_fqdn" {
   description = "FQDN of the PostgreSQL database"
 }
 
+output "postgres_database_name" {
+  value       = local.pg_db_name
+  description = "Name of the PostgreSQL database"
+}
+
 output "postgres_database_username" {
   value       = azurerm_postgresql_flexible_server.main.administrator_login
   description = "Username for the PostgreSQL database"
