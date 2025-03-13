@@ -18,6 +18,11 @@ output "redis_password_secret_id" {
   value       = azurerm_key_vault_secret.redis_password.id
 }
 
+output "redis_password_secret_name" {
+  description = "The name of the Key Vault secret for the Redis Cache password"
+  value       = azurerm_key_vault_secret.redis_password.name
+}
+
 output "redis_application_security_group_name" {
   value       = azurerm_application_security_group.main_redis_endpoint.name
   description = "Name of the redis application security group"

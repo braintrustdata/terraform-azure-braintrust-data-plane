@@ -75,3 +75,55 @@ module "storage" {
   private_endpoint_subnet_id = module.main_vnet.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
+
+resource "kubernetes_namespace" "main" {
+  metadata {
+    name = "${var.deployment_name}-data-plane"
+  }
+}
+
+resource "kubernetes_config_map" "main" {
+  metadata {
+    namespace = kubernetes_namespace.main.metadata[0].name
+    name      = "braintrust-data-plane-config"
+  }
+
+  data = {
+    "REDIS_HOST"                  = module.redis.redis_hostname
+    "REDIS_PORT"                  = module.redis.redis_ssl_port
+    "REDIS_PASSWORD_SECRET_ID"    = module.redis.redis_password_secret_id
+    "POSTGRES_HOST"               = module.database.postgres_database_fqdn
+    "POSTGRES_PORT"               = "5432"
+    "POSTGRES_USER"               = module.database.postgres_database_username
+    "POSTGRES_DB"                 = module.database.postgres_database_name
+    "POSTGRES_PASSWORD_SECRET_ID" = module.database.postgres_password_secret_id
+    "KEY_VAULT_NAME"              = module.kms.key_vault_name
+    "BRAINSTORE_URL"              = "http://brainstore.${kubernetes_namespace.main.metadata[0].name}.svc.cluster.local:80"
+  }
+}
+
+ephemeral "azurerm_key_vault_secret" "redis_password" {
+  name         = module.redis.redis_password_secret_name
+  key_vault_id = local.key_vault_id
+}
+
+ephemeral "azurerm_key_vault_secret" "postgres_password" {
+  name         = module.database.postgres_password_secret_name
+  key_vault_id = local.key_vault_id
+}
+
+resource "kubernetes_secret" "credentials" {
+  metadata {
+    namespace = kubernetes_namespace.main.metadata[0].name
+    name      = "braintrust-data-plane-secrets"
+  }
+
+  data = {
+    "REDIS_PASSWORD"    = ephemeral.azurerm_key_vault_secret.redis_password.value
+    "POSTGRES_PASSWORD" = ephemeral.azurerm_key_vault_secret.postgres_password.value
+    "PG_URL"            = "postgres://${module.database.postgres_database_username}:${ephemeral.azurerm_key_vault_secret.postgres_password.value}@${module.database.postgres_database_fqdn}:5432/${module.database.postgres_database_name}"
+    "REDIS_URL"         = "rediss://:${ephemeral.azurerm_key_vault_secret.redis_password.value}@${module.redis.redis_hostname}:${module.redis.redis_ssl_port}"
+  }
+
+  type = "Opaque"
+}

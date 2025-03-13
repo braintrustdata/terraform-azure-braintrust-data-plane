@@ -23,6 +23,11 @@ output "postgres_password_secret_id" {
   description = "ID of the Key Vault secret for the PostgreSQL database"
 }
 
+output "postgres_password_secret_name" {
+  description = "The name of the Key Vault secret for the PostgreSQL database"
+  value       = azurerm_key_vault_secret.postgres_password.name
+}
+
 output "postgres_application_security_group_name" {
   value       = azurerm_application_security_group.main_db_endpoint.name
   description = "Name of the postgres application security group"
