@@ -18,9 +18,9 @@ output "brainstore_container_name" {
   value       = azurerm_storage_container.brainstore.name
 }
 
-output "lambda_responses_container_name" {
-  description = "The name of the lambda-responses container"
-  value       = azurerm_storage_container.lambda_responses.name
+output "responses_container_name" {
+  description = "The name of the responses container"
+  value       = azurerm_storage_container.responses.name
 }
 
 output "code_bundles_container_name" {
