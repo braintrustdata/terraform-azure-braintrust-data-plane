@@ -9,7 +9,7 @@ output "vnet_name" {
 }
 
 output "vnet_address_space" {
-  value       = value       = length(azurerm_virtual_network.main.address_space) > 0 ? azurerm_virtual_network.main.address_space[0] : null
+  value       = length(azurerm_virtual_network.main.address_space) > 0 ? azurerm_virtual_network.main.address_space[0] : null
   description = "Address space of the virtual network"
 }
 
