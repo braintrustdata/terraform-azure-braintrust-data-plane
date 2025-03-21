@@ -37,6 +37,12 @@ variable "existing_vnet" {
     services_subnet_id         = string
     private_endpoint_subnet_id = string
   })
+  default = {
+    id                         = ""
+    name                       = ""
+    services_subnet_id         = ""
+    private_endpoint_subnet_id = ""
+  }
 }
 
 
