@@ -4,12 +4,12 @@ output "resource_group_name" {
 }
 
 output "main_vnet_id" {
-  value       = module.main_vnet.vnet_id
+  value       = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
   description = "ID of the main VNet that contains the Braintrust resources"
 }
 
 output "main_vnet_address_space" {
-  value       = module.main_vnet.vnet_address_space
+  value       = var.existing_vnet.id == "" ? module.main_vnet.vnet_address_space : ""
   description = "Address space of the main VNet"
 }
 

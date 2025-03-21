@@ -14,8 +14,8 @@ module "kms" {
   deployment_name            = var.deployment_name
   resource_group_name        = azurerm_resource_group.main.name
   location                   = var.location
-  virtual_network_id         = module.main_vnet.vnet_id
-  private_endpoint_subnet_id = module.main_vnet.private_endpoint_subnet_id
+  virtual_network_id         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
+  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
 }
 
 module "main_vnet" {
@@ -44,7 +44,7 @@ module "database" {
   postgres_version      = var.postgres_version
   postgres_storage_tier = var.postgres_storage_tier
 
-  virtual_network_id         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
+  vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
   private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
