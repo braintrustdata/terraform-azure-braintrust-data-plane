@@ -9,7 +9,7 @@ output "main_vnet_id" {
 }
 
 output "main_vnet_address_space" {
-  value       = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_address_space : toset("")
+  value       = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_address_space : toset([""])
   description = "Address space of the main VNet"
 }
 
