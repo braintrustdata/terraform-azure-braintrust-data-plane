@@ -1,0 +1,92 @@
+# Default values for braintrust Helm chart
+# This is a YAML-formatted file.
+
+# Global configs
+global:
+  orgName: "<your org name on Braintrust>"
+  namespace: "braintrust"
+  image:
+    pullPolicy: IfNotPresent
+
+# Azure Key Vault CSI Driver configuration
+azureKeyVaultCSI:
+  name: ""                        # Key Vault name from Terraform output
+  tenantId: ""
+  userAssignedIdentityID: ""
+  secrets:
+    - name: postgres-password
+      objectName: postgres-password
+      objectType: secret
+    - name: redis-password
+      objectName: redis-password
+      objectType: secret
+    - name: brainstore-license-key
+      objectName: brainstore-license-key
+      objectType: secret
+
+# Database configuration
+database:
+  host: ""                        # PostgreSQL FQDN from Terraform output
+  port: 5432
+  name: "braintrust"
+  username: "postgres"            # PostgreSQL username from Terraform output
+
+# Redis configuration
+redis:
+  host: ""                        # Redis FQDN from Terraform output
+  port: 6380
+
+
+# Azure Storage configuration
+storage:
+  connectionString: ""            # BlobEndpoint=https://...
+  containerName: "brainstore"     # From Terraform output
+  brainstore:
+    indexUri: "az://brainstore/brainstore/index"
+    walUri: "az://brainstore/brainstore/wal"
+    blobUrl: "az://brainstore"
+  responseBucket: "responses"
+  codeBundleBucket: "code-bundles"
+
+# API service configuration
+api:
+  name: "braintrust-api"
+  replicas: 2
+  image:
+    repository: public.ecr.aws/braintrust/standalone-api
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 3000
+  resources:
+    requests:
+      cpu: "2"
+      memory: "4Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+  allowCodeFunctionExecution: true
+
+# Brainstore configuration
+brainstore:
+  name: "brainstore"
+  replicas: 1
+  image:
+    repository: public.ecr.aws/braintrust/brainstore
+    tag: latest
+  command: ["web"]
+  service:
+    type: ClusterIP
+    port: 4000
+  resources:
+    requests:
+      cpu: "8"
+      memory: "16Gi"
+    limits:
+      cpu: "16"
+      memory: "32Gi"
+  # Local cache settings - uses local ephemeral storage (emptyDir)
+  cacheDir: "/mnt/tmp/brainstore"
+  cacheSizeLimit: "50Gi"
+  verbose: true
+  noColor: true

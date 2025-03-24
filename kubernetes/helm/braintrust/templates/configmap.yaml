@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: braintrust-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  org_name: {{ .Values.global.orgName | quote }}
+  postgres_host: {{ .Values.database.host | quote }}
+  postgres_username: {{ .Values.database.username | quote }}
+  redis_host: {{ .Values.redis.host | quote }}
+  redis_port: {{ .Values.redis.port | quote }}
+  storage_connection_string: {{ .Values.storage.connectionString | quote }}
+  brainstore_index_uri: {{ .Values.storage.brainstore.indexUri | quote }}
+  brainstore_wal_uri: {{ .Values.storage.brainstore.walUri | quote }}
+  brainstore_blob_url: {{ .Values.storage.brainstore.blobUrl | quote }}
