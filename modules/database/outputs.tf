@@ -8,6 +8,11 @@ output "postgres_database_fqdn" {
   description = "FQDN of the PostgreSQL database"
 }
 
+output "postgres_database_name" {
+  value       = local.pg_db_name
+  description = "Name of the PostgreSQL database"
+}
+
 output "postgres_database_username" {
   value       = azurerm_postgresql_flexible_server.main.administrator_login
   description = "Username for the PostgreSQL database"
@@ -16,6 +21,11 @@ output "postgres_database_username" {
 output "postgres_password_secret_id" {
   value       = azurerm_key_vault_secret.postgres_password.id
   description = "ID of the Key Vault secret for the PostgreSQL database"
+}
+
+output "postgres_password_secret_name" {
+  description = "The name of the Key Vault secret for the PostgreSQL database"
+  value       = azurerm_key_vault_secret.postgres_password.name
 }
 
 output "postgres_application_security_group_name" {

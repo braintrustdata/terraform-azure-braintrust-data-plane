@@ -9,7 +9,7 @@ output "vnet_name" {
 }
 
 output "vnet_address_space" {
-  value       = azurerm_virtual_network.main.address_space
+  value       = tolist(azurerm_virtual_network.main.address_space)[0]
   description = "Address space of the virtual network"
 }
 

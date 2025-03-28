@@ -65,3 +65,14 @@ module "redis" {
   private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
+
+module "storage" {
+  source = "./modules/storage"
+
+  resource_group_name        = azurerm_resource_group.main.name
+  deployment_name            = var.deployment_name
+  location                   = var.location
+  vnet_id                    = module.main_vnet.vnet_id
+  private_endpoint_subnet_id = module.main_vnet.private_endpoint_subnet_id
+  key_vault_id               = local.key_vault_id
+}
