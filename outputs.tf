@@ -22,3 +22,5 @@ output "redis_id" {
   value       = module.redis.redis_id
   description = "ID of the Redis instance"
 }
+
+// TDOO expose stoarage account connection string

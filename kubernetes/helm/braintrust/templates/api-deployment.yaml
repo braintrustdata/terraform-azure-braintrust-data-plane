@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.api.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.api.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.api.name }}
+    spec:
+      containers:
+        - name: api
+          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.api.service.port }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          env:
+            - name: ORG_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: braintrust-config
+                  key: org_name
+            - name: PG_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: braintrust-config
+                  key: pg_url
+            - name: REDIS_URL
+              value: "redis://$(REDIS_HOST):$(REDIS_PORT)"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: braintrust-config
+                  key: redis_host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: braintrust-config
+                  key: redis_port
+            - name: AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                configMapKeyRef:
+                  name: braintrust-config
+                  key: storage_connection_string
+            - name: RESPONSE_BUCKET
+              value: {{ .Values.storage.responseBucket | quote }}
+            - name: CODE_BUNDLE_BUCKET
+              value: {{ .Values.storage.codeBundleBucket | quote }}
+            - name: BRAINSTORE_ENABLED
+              value: "true"
+            - name: BRAINSTORE_URL
+              value: "http://{{ .Values.brainstore.name }}-service:{{ .Values.brainstore.service.port }}"
+            - name: BRAINSTORE_REALTIME_WAL_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: braintrust-config
+                  key: brainstore_blob_url
+            - name: BRAINSTORE_ENABLE_HISTORICAL_FULL_BACKFILL
+              value: {{ .Values.brainstore.enableHistoricalFullBackfill | quote }}
+            - name: BRAINSTORE_BACKFILL_NEW_OBJECTS
+              value: {{ .Values.brainstore.backfillNewObjects | quote }}
+            - name: BRAINSTORE_BACKFILL_DISABLE_HISTORICAL
+              value: {{ .Values.brainstore.backfillDisableHistorical | quote }}
+            - name: BRAINSTORE_BACKFILL_DISABLE_NONHISTORICAL
+              value: {{ .Values.brainstore.backfillDisableNonhistorical | quote }}
+            - name: ALLOW_CODE_FUNCTION_EXECUTION
+              value: {{ .Values.api.allowCodeFunctionExecution | quote }}
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kvname"
