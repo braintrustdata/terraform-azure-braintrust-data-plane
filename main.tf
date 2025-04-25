@@ -72,7 +72,7 @@ module "storage" {
   resource_group_name        = azurerm_resource_group.main.name
   deployment_name            = var.deployment_name
   location                   = var.location
-  vnet_id                    = module.main_vnet.vnet_id
-  private_endpoint_subnet_id = module.main_vnet.private_endpoint_subnet_id
+  vnet_id                    = module.main_vnet[0].vnet_id
+  private_endpoint_subnet_id = module.main_vnet[0].private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
