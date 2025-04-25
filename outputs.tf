@@ -8,11 +8,6 @@ output "main_vnet_id" {
   description = "ID of the main VNet that contains the Braintrust resources"
 }
 
-output "main_vnet_address_space" {
-  value       = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_address_space : toset([""])
-  description = "Address space of the main VNet"
-}
-
 output "postgres_database_id" {
   value       = module.database.postgres_database_id
   description = "ID of the main Braintrust Postgres database"
