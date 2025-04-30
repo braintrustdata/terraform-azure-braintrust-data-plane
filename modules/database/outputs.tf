@@ -28,6 +28,16 @@ output "postgres_password_secret_name" {
   value       = azurerm_key_vault_secret.postgres_password.name
 }
 
+output "postgres_connection_string_secret_id" {
+  value       = azurerm_key_vault_secret.postgres_connection_string.id
+  description = "ID of the Key Vault secret for the PostgreSQL connection string"
+}
+
+output "postgres_connection_string_secret_name" {
+  value       = azurerm_key_vault_secret.postgres_connection_string.name
+  description = "Name of the Key Vault secret for the PostgreSQL connection string"
+}
+
 output "postgres_application_security_group_name" {
   value       = azurerm_application_security_group.main_db_endpoint.name
   description = "Name of the postgres application security group"
