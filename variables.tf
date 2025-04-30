@@ -28,6 +28,11 @@ variable "key_vault_id" {
   default     = null
 }
 
+variable "brainstore_license_key" {
+  type        = string
+  description = "The license key for the Brainstore instance. You can find this in the Braintrust UI under Settings > Data Plane > Brainstore License Key."
+}
+
 ## NETWORKING
 
 variable "existing_vnet" {
