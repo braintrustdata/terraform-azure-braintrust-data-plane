@@ -40,5 +40,10 @@ output "storage_identity_principal_id" {
 
 output "connection_string" {
   description = "Connection string for use with Azure AD authentication (no account key)"
-  value       = "BlobEndpoint=${azurerm_storage_account.main.primary_blob_endpoint};"
+  value       = azurerm_key_vault_secret.azure-storage-connection-string.value
+}
+
+output "connection_string_secret_name" {
+  description = "The name of the secret containing the connection string"
+  value       = azurerm_key_vault_secret.azure-storage-connection-string.name
 }
