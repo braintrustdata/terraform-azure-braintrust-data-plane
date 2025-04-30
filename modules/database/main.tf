@@ -1,6 +1,7 @@
 locals {
   db_name    = "${var.deployment_name}-database"
   pg_db_name = "braintrust"
+  pg_user    = "postgres"
 }
 
 resource "azurerm_postgresql_flexible_server" "main" {
@@ -12,7 +13,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
 
   public_network_access_enabled = false
 
-  administrator_login    = "postgres"
+  administrator_login    = local.pg_user
   administrator_password = azurerm_key_vault_secret.postgres_password.value
 
   sku_name          = var.postgres_sku_name
@@ -56,8 +57,14 @@ resource "azurerm_postgresql_flexible_server_database" "main" {
 }
 
 resource "azurerm_key_vault_secret" "postgres_password" {
-  name         = "${local.db_name}-password"
+  name         = "postgres-password"
   value        = random_password.postgres_password.result
+  key_vault_id = var.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "postgres_connection_string" {
+  name         = "postgres-connection-string"
+  value        = "postgresql://${local.pg_user}:${azurerm_key_vault_secret.postgres_password.value}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${local.pg_db_name}"
   key_vault_id = var.key_vault_id
 }
 
@@ -66,7 +73,6 @@ resource "random_password" "postgres_password" {
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
-
 
 resource "azurerm_key_vault_key" "postgres_cmk" {
   name         = "${local.db_name}-cmk"

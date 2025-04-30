@@ -72,7 +72,26 @@ module "storage" {
   resource_group_name        = azurerm_resource_group.main.name
   deployment_name            = var.deployment_name
   location                   = var.location
-  vnet_id                    = module.main_vnet.vnet_id
-  private_endpoint_subnet_id = module.main_vnet.private_endpoint_subnet_id
+  vnet_id                    = module.main_vnet[0].vnet_id
+  private_endpoint_subnet_id = module.main_vnet[0].private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
+}
+
+# Used for encrypting function env secrets. Function environment secrets can be specified
+# per org, project, or function and are exposed to functions as environment variables.
+resource "azurerm_key_vault_secret" "function_secret" {
+  name         = "function-secret-key"
+  value        = random_password.function_secret.result
+  key_vault_id = local.key_vault_id
+}
+
+resource "random_password" "function_secret" {
+  length  = 32
+  special = true
+}
+
+resource "azurerm_key_vault_secret" "brainstore_license_key" {
+  name         = "brainstore-license-key"
+  value        = var.brainstore_license_key
+  key_vault_id = local.key_vault_id
 }

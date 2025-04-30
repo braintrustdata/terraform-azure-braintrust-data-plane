@@ -1,9 +1,11 @@
 locals {
   # Names are highly restrictive for storage accounts. So we have to use a random suffix.
   # Max 24 chars. Letters & numbers ONLY
-  storage_account_name  = "btstorage${random_string.storage_account_suffix.result}"
-  key_name              = "${var.deployment_name}-storage-key"
-  private_dns_zone_name = "privatelink.blob.core.windows.net"
+  storage_account_name            = "btstorage${random_string.storage_account_suffix.result}"
+  key_name                        = "${var.deployment_name}-storage-key"
+  private_dns_zone_name           = "privatelink.blob.core.windows.net"
+  connection_string_secret_name   = "azure-storage-connection-string"
+  azure_storage_connection_string = "BlobEndpoint=${azurerm_storage_account.main.primary_blob_endpoint};"
 }
 
 resource "random_string" "storage_account_suffix" {
@@ -26,16 +28,10 @@ resource "azurerm_user_assigned_identity" "storage" {
   location            = var.location
 }
 
-resource "azurerm_key_vault_access_policy" "storage_identity" {
-  key_vault_id = var.key_vault_id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = azurerm_user_assigned_identity.storage.principal_id
-
-  key_permissions = [
-    "Get",
-    "UnwrapKey",
-    "WrapKey"
-  ]
+resource "azurerm_role_assignment" "storage_cmk" {
+  scope                = var.key_vault_id
+  role_definition_name = "Key Vault Crypto User"
+  principal_id         = azurerm_user_assigned_identity.storage.principal_id
 }
 
 resource "azurerm_storage_account" "main" {
@@ -66,9 +62,6 @@ resource "azurerm_storage_account" "main" {
     user_assigned_identity_id = azurerm_user_assigned_identity.storage.id
   }
 
-  depends_on = [
-    azurerm_key_vault_access_policy.storage_identity
-  ]
 }
 
 resource "azurerm_storage_container" "brainstore" {
@@ -125,3 +118,13 @@ resource "azurerm_private_endpoint" "storage" {
 }
 
 data "azurerm_client_config" "current" {}
+
+resource "azurerm_key_vault_secret" "azure-storage-connection-string" {
+  # Note: This does not actually contain a secret account key. It is stored in the key vault as a secret only because
+  # Helm expects it to be a secret. There may be cases where customers do not use our terraform module and they
+  # create their own storage account that uses a static account key. So we must assume this string is a secret.
+  name         = "azure-storage-connection-string"
+  value        = local.azure_storage_connection_string
+  key_vault_id = var.key_vault_id
+}
+
