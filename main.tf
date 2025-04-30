@@ -82,7 +82,7 @@ module "storage" {
 resource "azurerm_key_vault_secret" "function_secret" {
   name         = "function-secret-key"
   value        = random_password.function_secret.result
-  key_vault_id = azurerm_key_vault.main.id
+  key_vault_id = local.key_vault_id
 }
 
 resource "random_password" "function_secret" {
@@ -93,7 +93,5 @@ resource "random_password" "function_secret" {
 resource "azurerm_key_vault_secret" "brainstore_license_key" {
   name         = "brainstore-license-key"
   value        = var.brainstore_license_key
-  key_vault_id = azurerm_key_vault.main.id
+  key_vault_id = local.key_vault_id
 }
-
-provider "random" {}
