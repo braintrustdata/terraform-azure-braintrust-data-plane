@@ -69,9 +69,8 @@ resource "azurerm_key_vault_secret" "postgres_connection_string" {
 }
 
 resource "random_password" "postgres_password" {
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
+  length  = 16
+  special = false
 }
 
 resource "azurerm_key_vault_key" "postgres_cmk" {
