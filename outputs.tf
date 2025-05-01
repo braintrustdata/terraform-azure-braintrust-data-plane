@@ -162,5 +162,3 @@ output "key_vault_application_security_group_name" {
   value       = module.kms[0].key_vault_application_security_group_name
   description = "Name of the key vault application security group"
 }
-
-// TDOO expose stoarage account connection string
