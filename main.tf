@@ -94,4 +94,12 @@ resource "azurerm_key_vault_secret" "brainstore_license_key" {
   name         = "brainstore-license-key"
   value        = var.brainstore_license_key
   key_vault_id = local.key_vault_id
+  # This is required because some customers can't support including secrets in CI
+  # This lets them use "" and then later manually enter the secret directly into the key vault
+  # If this ever needs to change it can be done by tainting the resource
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
 }
