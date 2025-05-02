@@ -15,17 +15,17 @@ output "primary_blob_endpoint" {
 
 output "brainstore_container_name" {
   description = "The name of the brainstore container"
-  value       = azurerm_storage_container.brainstore.name
+  value       = vars.create_storage_container ? azurerm_storage_container.brainstore.name : ""
 }
 
 output "responses_container_name" {
   description = "The name of the responses container"
-  value       = azurerm_storage_container.responses.name
+  value       = vars.create_storage_container ? azurerm_storage_container.responses.name : ""
 }
 
 output "code_bundles_container_name" {
   description = "The name of the code-bundles container"
-  value       = azurerm_storage_container.code_bundles.name
+  value       = vars.create_storage_container ? azurerm_storage_container.code_bundles.name : ""
 }
 
 output "storage_identity_id" {
