@@ -27,3 +27,9 @@ variable "vnet_id" {
   description = "The ID of the virtual network to link with the private DNS zone"
   type        = string
 }
+
+variable "create_storage_container" {
+  description = "Create containers for the blobstorage. Defaults to true. Disable this if CI CD cannot reach the storage APIs."
+  type        = boolean
+  default     = true
+}
