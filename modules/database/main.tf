@@ -64,7 +64,7 @@ resource "azurerm_key_vault_secret" "postgres_password" {
 
 resource "azurerm_key_vault_secret" "postgres_connection_string" {
   name         = "postgres-connection-string"
-  value        = "postgres://${local.pg_user}:${azurerm_key_vault_secret.postgres_password.value}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${local.pg_db_name}"
+  value        = "postgres://${local.pg_user}:${azurerm_key_vault_secret.postgres_password.value}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${local.pg_db_name}?sslmode=require"
   key_vault_id = var.key_vault_id
 }
 
