@@ -88,3 +88,16 @@ resource "azurerm_key_vault_key" "postgres_cmk" {
     "wrapKey",
   ]
 }
+
+resource "azurerm_postgresql_flexible_server_configuration" "extensions" {
+  name      = "shared_preload_libraries"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "pg_stat_statements,pg_hint_plan,pg_cron"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "allow_extensions" {
+  name      = "azure.extensions"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "pg_stat_statements,pg_hint_plan,pg_cron"
+}
+
