@@ -64,7 +64,7 @@ resource "azurerm_key_vault_secret" "postgres_password" {
 
 resource "azurerm_key_vault_secret" "postgres_connection_string" {
   name         = "postgres-connection-string"
-  value        = "postgresql://${local.pg_user}:${azurerm_key_vault_secret.postgres_password.value}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${local.pg_db_name}"
+  value        = "postgres://${local.pg_user}:${azurerm_key_vault_secret.postgres_password.value}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${local.pg_db_name}"
   key_vault_id = var.key_vault_id
 }
 
@@ -88,3 +88,16 @@ resource "azurerm_key_vault_key" "postgres_cmk" {
     "wrapKey",
   ]
 }
+
+resource "azurerm_postgresql_flexible_server_configuration" "extensions" {
+  name      = "shared_preload_libraries"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "pg_stat_statements,pg_hint_plan,pg_cron"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "allow_extensions" {
+  name      = "azure.extensions"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "pg_stat_statements,pg_hint_plan,pg_cron"
+}
+
