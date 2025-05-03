@@ -75,6 +75,7 @@ module "storage" {
   vnet_id                    = module.main_vnet[0].vnet_id
   private_endpoint_subnet_id = module.main_vnet[0].private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
+  create_storage_container   = var.create_storage_container
 }
 
 # Used for encrypting function env secrets. Function environment secrets can be specified

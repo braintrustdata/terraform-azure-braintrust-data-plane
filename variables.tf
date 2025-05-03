@@ -119,6 +119,10 @@ variable "redis_version" {
   default     = "6"
 }
 
+## STORAGE
 
-
-
+variable "create_storage_container" {
+  description = "Create containers for the blobstorage. Defaults to true. Disable this if CI CD cannot reach the storage APIs."
+  type        = boolean
+  default     = true
+}
