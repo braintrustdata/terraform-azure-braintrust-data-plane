@@ -40,7 +40,7 @@ resource "azurerm_storage_account" "main" {
   location                   = var.location
   account_tier               = "Premium"
   account_replication_type   = "ZRS"
-  access_tier                = "Hot"
+  account_kind               = "BlockBlobStorage"
   min_tls_version            = "TLS1_2"
   https_traffic_only_enabled = true
 
