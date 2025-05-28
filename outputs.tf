@@ -162,3 +162,33 @@ output "key_vault_application_security_group_name" {
   value       = module.kms[0].key_vault_application_security_group_name
   description = "Name of the key vault application security group"
 }
+
+output "brainstore_identity_id" {
+  value       = module.services.brainstore_identity_id
+  description = "ID of the brainstore managed identity"
+}
+
+output "api_handler_identity_id" {
+  value       = module.services.api_handler_identity_id
+  description = "ID of the api-handler managed identity"
+}
+
+output "brainstore_identity_client_id" {
+  value       = module.services.brainstore_identity_client_id
+  description = "Client ID of the brainstore managed identity"
+}
+
+output "api_handler_identity_client_id" {
+  value       = module.services.api_handler_identity_client_id
+  description = "Client ID of the api-handler managed identity"
+}
+
+output "brainstore_identity_principal_id" {
+  value       = module.services.brainstore_identity_principal_id
+  description = "Principal ID of the brainstore managed identity"
+}
+
+output "api_handler_identity_principal_id" {
+  value       = module.services.api_handler_identity_principal_id
+  description = "Principal ID of the api-handler managed identity"
+}

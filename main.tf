@@ -85,6 +85,21 @@ resource "azurerm_key_vault_secret" "function_secret" {
   key_vault_id = local.key_vault_id
 }
 
+module "k8s" {
+  source = "./modules/k8s"
+
+  cluster_name = "${var.deployment_name}-k8s"
+  key_vault_id = local.key_vault_id
+
+  resource_group_name = azurerm_resource_group.main.name
+  location            = var.location
+
+  vnet_name                = module.main_vnet[0].vnet_name
+  vnet_resource_group_name = azurerm_resource_group.main.name
+  services_subnet_id       = module.main_vnet[0].services_subnet_id
+  ssh_public_key           = "a"
+}
+
 resource "random_password" "function_secret" {
   length  = 32
   special = true
@@ -102,4 +117,12 @@ resource "azurerm_key_vault_secret" "brainstore_license_key" {
       value
     ]
   }
+}
+
+module "services" {
+  source = "./modules/services"
+
+  resource_group_name = azurerm_resource_group.main.name
+  location            = var.location
+  storage_account_id  = module.storage.storage_account_id
 }

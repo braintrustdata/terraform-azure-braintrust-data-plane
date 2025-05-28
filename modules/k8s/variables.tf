@@ -18,13 +18,13 @@ variable "cluster_name" {
 variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
-  default     = "1.28.5"
+  default     = "1.31"
 }
 
 variable "vm_size" {
   description = "VM size for the nodes"
   type        = string
-  default     = "Standard_D2s_v3" # Smaller VM size, good balance of CPU/memory
+  default     = "Standard_D2ds_v4" # Smaller VM size, good balance of CPU/memory
 }
 
 variable "vnet_name" {
@@ -52,5 +52,10 @@ variable "system_vm_size" {
   description = "VM size for the system nodes"
   type        = string
   default     = "Standard_D2ps_v6"
+}
+
+variable "key_vault_id" {
+  description = "The ID of the Key Vault that contains the secrets"
+  type        = string
 }
 
