@@ -106,3 +106,5 @@ resource "azurerm_postgresql_flexible_server_configuration" "pg_cron_db" {
   server_id = azurerm_postgresql_flexible_server.main.id
   value     = "braintrust"
 }
+
+# welcome Yika!
