@@ -66,7 +66,7 @@ resource "azurerm_storage_account" "main" {
 }
 
 resource "azurerm_storage_container" "brainstore" {
-  count = vars.create_storage_container ? 1 : 0
+  count = var.create_storage_container ? 1 : 0
 
   name                  = "brainstore"
   storage_account_id    = azurerm_storage_account.main.id
@@ -74,7 +74,7 @@ resource "azurerm_storage_container" "brainstore" {
 }
 
 resource "azurerm_storage_container" "responses" {
-  count = vars.create_storage_container ? 1 : 0
+  count = var.create_storage_container ? 1 : 0
 
   name                  = "responses"
   storage_account_id    = azurerm_storage_account.main.id
@@ -82,7 +82,7 @@ resource "azurerm_storage_container" "responses" {
 }
 
 resource "azurerm_storage_container" "code_bundles" {
-  count = vars.create_storage_container ? 1 : 0
+  count = var.create_storage_container ? 1 : 0
 
   name                  = "code-bundles"
   storage_account_id    = azurerm_storage_account.main.id

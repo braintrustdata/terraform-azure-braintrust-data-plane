@@ -37,16 +37,20 @@ variable "brainstore_license_key" {
 
 variable "existing_vnet" {
   type = object({
-    id                         = string
-    name                       = string
-    services_subnet_id         = string
-    private_endpoint_subnet_id = string
+    id                                         = string
+    name                                       = string
+    services_subnet_id                         = string
+    private_endpoint_subnet_id                 = string
+    private_endpoint_network_security_group_id = string
+    address_space                              = string
   })
   default = {
-    id                         = ""
-    name                       = ""
-    services_subnet_id         = ""
-    private_endpoint_subnet_id = ""
+    id                                         = ""
+    name                                       = ""
+    services_subnet_id                         = ""
+    private_endpoint_subnet_id                 = ""
+    private_endpoint_network_security_group_id = ""
+    address_space                              = ""
   }
 }
 
@@ -119,6 +123,9 @@ variable "redis_version" {
   default     = "6"
 }
 
-
-
-
+## Storage
+variable "create_storage_container" {
+  description = "Create containers for the blobstorage. Defaults to true. Disable this if CI CD cannot reach the storage APIs."
+  type        = bool
+  default     = true
+}

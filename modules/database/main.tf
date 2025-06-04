@@ -101,3 +101,8 @@ resource "azurerm_postgresql_flexible_server_configuration" "allow_extensions" {
   value     = "pg_stat_statements,pg_hint_plan,pg_cron"
 }
 
+resource "azurerm_postgresql_flexible_server_configuration" "pg_cron_db" {
+  name      = "cron.database_name"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "braintrust"
+}

@@ -24,7 +24,7 @@ output "services_subnet_id" {
 }
 
 output "services_network_security_group_id" {
-  value       = var.existing_vnet.id == "" ? module.main_vnet[0].services_network_security_group_id : var.existing_vnet.services_network_security_group_id
+  value       = var.existing_vnet.id == "" ? module.main_vnet[0].services_network_security_group_id : ""
   description = "ID of the services network security group"
 }
 
@@ -144,21 +144,21 @@ output "storage_identity_principal_id" {
 }
 
 output "key_vault_id" {
-  value       = module.kms[0].key_vault_id
+  value       = var.key_vault_id == null ? module.kms[0].key_vault_id : var.key_vault_id
   description = "The ID of the Key Vault"
 }
 
 output "key_vault_name" {
-  value       = module.kms[0].key_vault_name
+  value       = var.key_vault_id == null ? module.kms[0].key_vault_name : ""
   description = "The name of the Key Vault"
 }
 
 output "key_vault_uri" {
-  value       = module.kms[0].key_vault_uri
+  value       = var.key_vault_id == null ? module.kms[0].key_vault_uri : ""
   description = "The URI of the Key Vault"
 }
 
 output "key_vault_application_security_group_name" {
-  value       = module.kms[0].key_vault_application_security_group_name
+  value       = var.key_vault_id == null ? module.kms[0].key_vault_application_security_group_name : ""
   description = "Name of the key vault application security group"
 }
