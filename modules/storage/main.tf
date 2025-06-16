@@ -54,7 +54,7 @@ resource "azurerm_storage_account" "main" {
     cors_rule {
       allowed_headers    = ["*"]
       allowed_methods    = ["GET", "PUT", "HEAD"]
-      allowed_origins    = ["*"]
+      allowed_origins    = ["https://braintrust.dev", "https://*.preview.braintrust.dev"]
       exposed_headers    = ["*"]
       max_age_in_seconds = 3600
     }
