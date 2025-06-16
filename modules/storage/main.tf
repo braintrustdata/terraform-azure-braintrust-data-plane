@@ -51,6 +51,13 @@ resource "azurerm_storage_account" "main" {
   blob_properties {
     versioning_enabled  = false
     change_feed_enabled = false
+    cors_rule {
+      allowed_headers    = ["*"]
+      allowed_methods    = ["GET", "PUT", "HEAD"]
+      allowed_origins    = ["*"]
+      exposed_headers    = ["*"]
+      max_age_in_seconds = 3600
+    }
   }
 
   identity {
