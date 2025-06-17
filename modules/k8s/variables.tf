@@ -24,7 +24,7 @@ variable "kubernetes_version" {
 variable "vm_size" {
   description = "VM size for the nodes"
   type        = string
-  default     = "Standard_D2s_v3" # Smaller VM size, good balance of CPU/memory
+  default     = "Standard_D16as_v6"
 }
 
 variable "vnet_name" {
@@ -51,6 +51,6 @@ variable "ssh_public_key" {
 variable "system_vm_size" {
   description = "VM size for the system nodes"
   type        = string
-  default     = "Standard_D2ps_v6"
+  default     = "Standard_D2as_v6"
 }
 
