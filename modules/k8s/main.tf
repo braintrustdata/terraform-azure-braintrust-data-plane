@@ -98,6 +98,24 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   vnet_subnet_id        = var.services_subnet_id
 }
 
+resource "azurerm_federated_identity_credential" "braintrust_api" {
+  name                = "${local.cluster_name}-braintrust-api"
+  resource_group_name = data.azurerm_resource_group.main.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  parent_id           = azurerm_user_assigned_identity.aks_identity.id
+  subject             = "system:serviceaccount:braintrust:braintrust-api"
+}
+
+resource "azurerm_federated_identity_credential" "brainstore" {
+  name                = "${local.cluster_name}-brainstore"
+  resource_group_name = data.azurerm_resource_group.main.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  parent_id           = azurerm_user_assigned_identity.aks_identity.id
+  subject             = "system:serviceaccount:braintrust:brainstore"
+}
+
 # resource "azurerm_private_dns_zone" "aks" {
 #   resource_group_name = var.resource_group_name
 #   name                = "privatelink.${data.azurerm_resource_group.main.location}.azmk8s.io"
