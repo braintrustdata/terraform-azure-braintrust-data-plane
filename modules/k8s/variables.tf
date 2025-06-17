@@ -3,6 +3,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "deployment_name" {
+  description = "Name of the deployment"
+  type        = string
+}
+
 variable "location" {
   description = "Azure region"
   type        = string

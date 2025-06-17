@@ -1,3 +1,7 @@
+locals {
+  cluster_name = "${var.deployment_name}-${var.cluster_name}"
+}
+
 data "azurerm_resource_group" "main" {
   name = var.resource_group_name
 }
@@ -10,7 +14,7 @@ data "azurerm_virtual_network" "main" {
 resource "azurerm_user_assigned_identity" "aks_identity" {
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
-  name                = "${var.cluster_name}-identity"
+  name                = "${local.cluster_name}-identity"
 }
 
 resource "azurerm_role_assignment" "aks_identity" {
@@ -27,7 +31,7 @@ resource "azurerm_role_assignment" "aks_identity" {
 resource "azurerm_kubernetes_cluster" "aks" {
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
-  name                = var.cluster_name
+  name                = local.cluster_name
   identity {
     type = "UserAssigned"
     identity_ids = [
@@ -57,7 +61,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   oidc_issuer_enabled = true
 
-  dns_prefix = var.cluster_name
+  dns_prefix = local.cluster_name
   # private_cluster_enabled             = false
   # private_cluster_public_fqdn_enabled = false
   # private_dns_zone_id                 = azurerm_private_dns_zone.aks.id
