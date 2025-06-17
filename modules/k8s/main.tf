@@ -21,6 +21,7 @@ resource "azurerm_role_assignment" "aks_identity" {
   for_each = toset([
     "Contributor",
     "Azure Kubernetes Service RBAC Cluster Admin",
+    "Key Vault Secrets User"
   ])
   scope                = data.azurerm_resource_group.main.id
   role_definition_name = each.value
