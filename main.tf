@@ -41,6 +41,7 @@ module "k8s" {
   source = "./modules/k8s"
   count  = var.create_aks_cluster ? 1 : 0
 
+  deployment_name     = var.deployment_name
   resource_group_name = azurerm_resource_group.main.name
   vnet_name           = local.vnet_name
   services_subnet_id  = local.services_subnet_id
