@@ -73,6 +73,14 @@ variable "private_endpoint_subnet_cidr" {
   default     = null
 }
 
+## AKS
+variable "create_aks_cluster" {
+  description = "Create an AKS cluster"
+  type        = bool
+  default     = true
+}
+
+
 ## Database
 variable "postgres_sku_name" {
   description = "SKU name for the Azure Database for PostgreSQL instance."
