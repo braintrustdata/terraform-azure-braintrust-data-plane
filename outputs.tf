@@ -162,3 +162,9 @@ output "key_vault_application_security_group_name" {
   value       = var.key_vault_id == null ? module.kms[0].key_vault_application_security_group_name : ""
   description = "Name of the key vault application security group"
 }
+
+output "aks" {
+  value       = module.k8s[0].aks
+  description = "The AKS cluster"
+  sensitive   = true
+}

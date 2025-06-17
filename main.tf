@@ -1,6 +1,9 @@
 locals {
   key_vault_id               = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
   vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
+  vnet_name                  = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_name : var.existing_vnet.name
+  vnet_address_space         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_address_space : var.existing_vnet.address_space
+  services_subnet_id         = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
   private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
 }
 
@@ -32,6 +35,15 @@ module "main_vnet" {
   vnet_address_space_cidr      = var.vnet_address_space_cidr
   services_subnet_cidr         = var.services_subnet_cidr
   private_endpoint_subnet_cidr = var.private_endpoint_subnet_cidr
+}
+
+module "k8s" {
+  source = "./modules/k8s"
+  count  = var.create_aks_cluster ? 1 : 0
+
+  resource_group_name = azurerm_resource_group.main.name
+  vnet_name           = local.vnet_name
+  services_subnet_id  = local.services_subnet_id
 }
 
 module "database" {

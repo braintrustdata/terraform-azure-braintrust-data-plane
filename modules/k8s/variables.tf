@@ -12,13 +12,7 @@ variable "location" {
 variable "cluster_name" {
   description = "Name of the AKS cluster"
   type        = string
-  default     = "aks-small-prod"
-}
-
-variable "kubernetes_version" {
-  description = "Kubernetes version"
-  type        = string
-  default     = "1.28.5"
+  default     = "aks"
 }
 
 variable "vm_size" {
@@ -32,20 +26,9 @@ variable "vnet_name" {
   type        = string
 }
 
-variable "vnet_resource_group_name" {
-  description = "Resource group name of the existing VNet"
-  type        = string
-}
-
 variable "services_subnet_id" {
   description = "ID of the subnet for AKS"
   type        = string
-}
-
-variable "ssh_public_key" {
-  description = "SSH public key for the nodes. "
-  type        = string
-  default     = null
 }
 
 variable "system_vm_size" {
