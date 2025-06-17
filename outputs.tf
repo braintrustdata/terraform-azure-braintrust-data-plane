@@ -172,3 +172,23 @@ output "aks_cluster_name" {
   value       = module.k8s[0].cluster_name
   description = "The AKS cluster name"
 }
+
+output "aks_identity_client_id" {
+  value       = module.k8s[0].aks_identity_client_id
+  description = "The client ID of the AKS identity"
+}
+
+output "aks_identity_object_id" {
+  value       = module.k8s[0].aks_identity_object_id
+  description = "The object ID of the AKS identity"
+}
+
+output "azure_tenant_id" {
+  value       = data.azurerm_client_config.current.tenant_id
+  description = "The tenant ID of the Azure subscription"
+}
+
+output "braintrust_org_name" {
+  value       = var.braintrust_org_name
+  description = "The name of the Braintrust organization"
+}
