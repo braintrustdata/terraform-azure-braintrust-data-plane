@@ -163,8 +163,12 @@ output "key_vault_application_security_group_name" {
   description = "Name of the key vault application security group"
 }
 
-output "aks" {
-  value       = module.k8s[0].aks
-  description = "The AKS cluster"
-  sensitive   = true
+output "kube_config" {
+  value       = module.k8s[0].kube_config
+  description = "The AKS cluster kubeconfig"
+}
+
+output "aks_cluster_name" {
+  value       = module.k8s[0].cluster_name
+  description = "The AKS cluster name"
 }
