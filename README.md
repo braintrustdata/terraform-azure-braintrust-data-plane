@@ -1,7 +1,5 @@
 # Braintrust Data Plane for Azure
 
-NOTE: This module is not production ready. It is a work in progress and actively being developed.
-
 This Terraform module deploys the Braintrust data plane on Azure. It creates all the necessary infrastructure to run Braintrust in your own Azure subscription.
 
 ## Architecture
