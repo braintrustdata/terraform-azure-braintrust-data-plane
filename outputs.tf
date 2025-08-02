@@ -162,3 +162,35 @@ output "key_vault_application_security_group_name" {
   value       = var.key_vault_id == null ? module.kms[0].key_vault_application_security_group_name : ""
   description = "Name of the key vault application security group"
 }
+
+
+output "kube_config" {
+  value       = var.create_aks_cluster ? module.k8s[0].kube_config : null
+  description = "The AKS cluster kubeconfig"
+}
+
+output "aks_cluster_name" {
+  value       = var.create_aks_cluster ? module.k8s[0].cluster_name : null
+  description = "The AKS cluster name"
+}
+
+output "aks_identity_client_id" {
+  value       = var.create_aks_cluster ? module.k8s[0].aks_identity_client_id : null
+  description = "The client ID of the AKS identity"
+}
+
+output "aks_identity_object_id" {
+  value       = var.create_aks_cluster ? module.k8s[0].aks_identity_object_id : null
+  description = "The object ID of the AKS identity"
+}
+
+output "azure_tenant_id" {
+  value       = data.azurerm_client_config.current.tenant_id
+  description = "The tenant ID of the Azure subscription"
+}
+
+output "braintrust_org_name" {
+  value       = var.braintrust_org_name
+  description = "The name of the Braintrust organization"
+}
+
