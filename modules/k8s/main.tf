@@ -88,15 +88,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
-  auto_scaling_enabled  = true
-  name                  = "user"
-  mode                  = "User"
-  min_count             = 2
-  max_count             = 10
-  node_count            = 2
-  vm_size               = var.vm_size
-  vnet_subnet_id        = var.services_subnet_id
+  kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
+  auto_scaling_enabled        = true
+  name                        = "user"
+  mode                        = "User"
+  min_count                   = 2
+  max_count                   = 10
+  node_count                  = 2
+  vm_size                     = var.vm_size
+  vnet_subnet_id              = var.services_subnet_id
+  temporary_name_for_rotation = "userrotate"
 }
 
 resource "azurerm_federated_identity_credential" "braintrust_api" {
