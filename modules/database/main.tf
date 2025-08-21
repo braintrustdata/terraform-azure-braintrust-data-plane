@@ -108,3 +108,10 @@ resource "azurerm_postgresql_flexible_server_configuration" "pg_cron_db" {
   server_id = azurerm_postgresql_flexible_server.main.id
   value     = "braintrust"
 }
+
+resource "azurerm_postgresql_flexible_server_configuration" "statement_timeout" {
+  name      = "statement_timeout"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "3600000"
+}
+
