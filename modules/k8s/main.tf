@@ -43,7 +43,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   sku_tier = "Standard"
   default_node_pool {
     name                 = "nodepool"
-    vm_size              = var.system_vm_size
+    vm_size              = var.system_pool_vm_size
     node_count           = 3
     min_count            = 3
     max_count            = 6
@@ -93,12 +93,23 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   name                        = "user"
   mode                        = "User"
   min_count                   = 2
-  max_count                   = 10
+  max_count                   = var.user_pool_max_count
   node_count                  = 2
-  vm_size                     = var.vm_size
+  vm_size                     = var.user_pool_vm_size
   vnet_subnet_id              = var.services_subnet_id
   temporary_name_for_rotation = "userrotate"
 }
+
+
+#----------------------------------------------------------------------------------------------
+# Federated identity credentials
+#----------------------------------------------------------------------------------------------
+# Format: `system:serviceaccount:<kubernetes-namespace>:<kubernetes-service-account-name>`
+# These are hard coded to match the default service account name in the helm chart.
+# What does this do in English:
+# When a Kubernetes service account with this specific identity
+# tries to authenticate, trust it and grant it access to the Azure resources associated with this
+# user-assigned managed identity.
 
 resource "azurerm_federated_identity_credential" "braintrust_api" {
   name                = "${local.cluster_name}-braintrust-api"
@@ -118,6 +129,9 @@ resource "azurerm_federated_identity_credential" "brainstore" {
   subject             = "system:serviceaccount:braintrust:brainstore"
 }
 
+# Uncommenting these plus the private_* ones in the k8s cluster above makes the cluster private.
+# Meaning there is no way to run kubectl from outside of the VNet (e.g. your laptop).
+# If there is demand we can parameterize this.
 # resource "azurerm_private_dns_zone" "aks" {
 #   resource_group_name = var.resource_group_name
 #   name                = "privatelink.${data.azurerm_resource_group.main.location}.azmk8s.io"

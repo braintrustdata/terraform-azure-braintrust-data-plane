@@ -19,10 +19,16 @@ variable "cluster_name" {
   default     = "aks"
 }
 
-variable "vm_size" {
+variable "user_pool_vm_size" {
   description = "VM size for the nodes"
   type        = string
   default     = "Standard_D16ds_v6"
+}
+
+variable "user_pool_max_count" {
+  description = "Maximum number of nodes in the user pool"
+  type        = number
+  default     = 10
 }
 
 variable "vnet_name" {
@@ -35,7 +41,7 @@ variable "services_subnet_id" {
   type        = string
 }
 
-variable "system_vm_size" {
+variable "system_pool_vm_size" {
   description = "VM size for the system nodes"
   type        = string
   default     = "Standard_D2as_v6"

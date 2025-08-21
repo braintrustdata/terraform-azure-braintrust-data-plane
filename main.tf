@@ -45,8 +45,9 @@ module "k8s" {
   resource_group_name = azurerm_resource_group.main.name
   vnet_name           = local.vnet_name
   services_subnet_id  = local.services_subnet_id
-  vm_size             = var.aks_user_vm_size
-  system_vm_size      = var.aks_system_vm_size
+  user_pool_vm_size   = var.aks_user_pool_vm_size
+  user_pool_max_count = var.aks_user_pool_max_count
+  system_pool_vm_size = var.aks_system_pool_vm_size
   location            = var.location
 }
 
