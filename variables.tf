@@ -80,6 +80,18 @@ variable "create_aks_cluster" {
   default     = true
 }
 
+variable "aks_system_vm_size" {
+  description = "VM size for the system nodes"
+  type        = string
+  default     = "Standard_D2as_v6"
+}
+
+variable "aks_user_vm_size" {
+  description = "VM size for the user nodes that run the application. Must be a SKU with a temporary local storage SSD."
+  type        = string
+  default     = "Standard_D16ds_v6"
+}
+
 
 ## Database
 variable "postgres_sku_name" {

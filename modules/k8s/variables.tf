@@ -11,7 +11,6 @@ variable "deployment_name" {
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "eastus"
 }
 
 variable "cluster_name" {
@@ -23,7 +22,7 @@ variable "cluster_name" {
 variable "vm_size" {
   description = "VM size for the nodes"
   type        = string
-  default     = "Standard_D16as_v6"
+  default     = "Standard_D16ds_v6"
 }
 
 variable "vnet_name" {
