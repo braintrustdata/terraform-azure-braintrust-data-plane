@@ -77,7 +77,8 @@ variable "private_endpoint_subnet_cidr" {
 variable "create_aks_cluster" {
   description = "Create an AKS cluster"
   type        = bool
-  default     = true
+  ## This should be made default on in a future release
+  default = false
 }
 
 variable "aks_system_pool_vm_size" {
