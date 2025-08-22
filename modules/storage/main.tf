@@ -29,9 +29,14 @@ resource "azurerm_user_assigned_identity" "storage" {
 }
 
 resource "azurerm_role_assignment" "storage_cmk" {
+  for_each = toset([
+    "Key Vault Crypto User",
+    "Key Vault Crypto Service Encryption User"
+  ])
   scope                = var.key_vault_id
-  role_definition_name = "Key Vault Crypto User"
+  role_definition_name = each.value
   principal_id         = azurerm_user_assigned_identity.storage.principal_id
+  principal_type       = "ServicePrincipal"
 }
 
 resource "azurerm_storage_account" "main" {

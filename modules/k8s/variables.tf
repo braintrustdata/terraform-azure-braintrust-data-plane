@@ -3,37 +3,36 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "deployment_name" {
+  description = "Name of the deployment"
+  type        = string
+}
+
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "eastus"
 }
 
 variable "cluster_name" {
   description = "Name of the AKS cluster"
   type        = string
-  default     = "aks-small-prod"
+  default     = "aks"
 }
 
-variable "kubernetes_version" {
-  description = "Kubernetes version"
-  type        = string
-  default     = "1.28.5"
-}
-
-variable "vm_size" {
+variable "user_pool_vm_size" {
   description = "VM size for the nodes"
   type        = string
-  default     = "Standard_D2s_v3" # Smaller VM size, good balance of CPU/memory
+  default     = "Standard_D16ds_v6"
+}
+
+variable "user_pool_max_count" {
+  description = "Maximum number of nodes in the user pool"
+  type        = number
+  default     = 10
 }
 
 variable "vnet_name" {
   description = "Name of the existing VNet"
-  type        = string
-}
-
-variable "vnet_resource_group_name" {
-  description = "Resource group name of the existing VNet"
   type        = string
 }
 
@@ -42,15 +41,9 @@ variable "services_subnet_id" {
   type        = string
 }
 
-variable "ssh_public_key" {
-  description = "SSH public key for the nodes. "
-  type        = string
-  default     = null
-}
-
-variable "system_vm_size" {
+variable "system_pool_vm_size" {
   description = "VM size for the system nodes"
   type        = string
-  default     = "Standard_D2ps_v6"
+  default     = "Standard_D2as_v6"
 }
 

@@ -1,5 +1,10 @@
 locals {
-  key_vault_id = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
+  key_vault_id               = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
+  vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
+  vnet_name                  = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_name : var.existing_vnet.name
+  vnet_address_space         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_address_space : var.existing_vnet.address_space
+  services_subnet_id         = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
+  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
 }
 
 resource "azurerm_resource_group" "main" {
@@ -14,8 +19,8 @@ module "kms" {
   deployment_name            = var.deployment_name
   resource_group_name        = azurerm_resource_group.main.name
   location                   = var.location
-  virtual_network_id         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
-  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
+  virtual_network_id         = local.vnet_id
+  private_endpoint_subnet_id = local.private_endpoint_subnet_id
 }
 
 module "main_vnet" {
@@ -32,6 +37,20 @@ module "main_vnet" {
   private_endpoint_subnet_cidr = var.private_endpoint_subnet_cidr
 }
 
+module "k8s" {
+  source = "./modules/k8s"
+  count  = var.create_aks_cluster ? 1 : 0
+
+  deployment_name     = var.deployment_name
+  resource_group_name = azurerm_resource_group.main.name
+  vnet_name           = local.vnet_name
+  services_subnet_id  = local.services_subnet_id
+  user_pool_vm_size   = var.aks_user_pool_vm_size
+  user_pool_max_count = var.aks_user_pool_max_count
+  system_pool_vm_size = var.aks_system_pool_vm_size
+  location            = var.location
+}
+
 module "database" {
   source = "./modules/database"
 
@@ -44,8 +63,8 @@ module "database" {
   postgres_version      = var.postgres_version
   postgres_storage_tier = var.postgres_storage_tier
 
-  vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
-  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
+  vnet_id                    = local.vnet_id
+  private_endpoint_subnet_id = local.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
 
@@ -61,8 +80,8 @@ module "redis" {
   redis_capacity = var.redis_capacity
   redis_version  = var.redis_version
 
-  virtual_network_id         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
-  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
+  virtual_network_id         = local.vnet_id
+  private_endpoint_subnet_id = local.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 }
 
@@ -72,8 +91,8 @@ module "storage" {
   resource_group_name        = azurerm_resource_group.main.name
   deployment_name            = var.deployment_name
   location                   = var.location
-  vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
-  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
+  vnet_id                    = local.vnet_id
+  private_endpoint_subnet_id = local.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
   create_storage_container   = var.create_storage_container
 }

@@ -73,6 +73,33 @@ variable "private_endpoint_subnet_cidr" {
   default     = null
 }
 
+## AKS
+variable "create_aks_cluster" {
+  description = "Create an AKS cluster"
+  type        = bool
+  ## This should be made default on in a future release
+  default = false
+}
+
+variable "aks_system_pool_vm_size" {
+  description = "VM size for the system nodes"
+  type        = string
+  default     = "Standard_D2as_v6"
+}
+
+variable "aks_user_pool_vm_size" {
+  description = "VM size for the user nodes that run the application. Must be a SKU with a temporary local storage SSD."
+  type        = string
+  default     = "Standard_D16ds_v6"
+}
+
+variable "aks_user_pool_max_count" {
+  description = "Maximum number of nodes in the user pool"
+  type        = number
+  default     = 10
+}
+
+
 ## Database
 variable "postgres_sku_name" {
   description = "SKU name for the Azure Database for PostgreSQL instance."
