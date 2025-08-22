@@ -98,6 +98,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   vm_size                     = var.user_pool_vm_size
   vnet_subnet_id              = var.services_subnet_id
   temporary_name_for_rotation = "userrotate"
+
+  lifecycle {
+    ignore_changes = [
+      node_count
+    ]
+  }
 }
 
 
