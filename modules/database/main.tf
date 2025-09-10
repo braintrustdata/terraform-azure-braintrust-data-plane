@@ -115,3 +115,15 @@ resource "azurerm_postgresql_flexible_server_configuration" "statement_timeout" 
   value     = "3600000"
 }
 
+resource "azurerm_postgresql_flexible_server_configuration" "collector_database_activity" {
+  name      = "metrics.collector_database_activity"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "ON"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "autovacuum_diagnostics" {
+  name      = "metrics.autovacuum_diagnostics"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "ON"
+}
+
