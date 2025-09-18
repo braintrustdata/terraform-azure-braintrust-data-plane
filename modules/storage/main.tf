@@ -102,13 +102,13 @@ resource "azurerm_storage_container" "code_bundles" {
 }
 
 resource "azurerm_private_dns_zone" "blob" {
-  count               = var.blob_private_dns_zone_id == "" ? 1 : 0
+  count               = var.existing_blob_private_dns_zone_id == "" ? 1 : 0
   name                = local.private_dns_zone_name
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
-  count                 = var.blob_private_dns_zone_id == "" ? 1 : 0
+  count                 = var.existing_blob_private_dns_zone_id == "" ? 1 : 0
   name                  = "${local.storage_account_name}-link"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.blob[0].name
@@ -129,7 +129,7 @@ resource "azurerm_private_endpoint" "storage" {
   }
   private_dns_zone_group {
     name                 = "default"
-    private_dns_zone_ids = [var.blob_private_dns_zone_id != "" ? var.blob_private_dns_zone_id : azurerm_private_dns_zone.blob[0].id]
+    private_dns_zone_ids = [var.existing_blob_private_dns_zone_id != "" ? var.existing_blob_private_dns_zone_id : azurerm_private_dns_zone.blob[0].id]
   }
 
   depends_on = [

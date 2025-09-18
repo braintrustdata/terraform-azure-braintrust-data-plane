@@ -34,7 +34,8 @@ variable "create_storage_container" {
   default     = true
 }
 
-variable "blob_private_dns_zone_id" {
-  description = "id of private dns zone for blob storage if it's already exists"
+variable "existing_blob_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for blob storage private endpoint. Only needed if you want to deploy two data planes into the same VNet. Leave blank to auto-create one."
   type        = string
+  default     = ""
 }

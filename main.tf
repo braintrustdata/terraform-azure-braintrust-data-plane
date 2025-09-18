@@ -67,7 +67,7 @@ module "database" {
   private_endpoint_subnet_id = local.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 
-  pg_private_dns_zone_id = var.pg_private_dns_zone_id
+  existing_postgres_private_dns_zone_id = var.existing_postgres_private_dns_zone_id
 }
 
 module "redis" {
@@ -86,7 +86,7 @@ module "redis" {
   private_endpoint_subnet_id = local.private_endpoint_subnet_id
   key_vault_id               = local.key_vault_id
 
-  redis_private_dns_zone_id = var.redis_private_dns_zone_id
+  existing_redis_private_dns_zone_id = var.existing_redis_private_dns_zone_id
 }
 
 module "storage" {
@@ -100,7 +100,7 @@ module "storage" {
   key_vault_id               = local.key_vault_id
   create_storage_container   = var.create_storage_container
 
-  blob_private_dns_zone_id = var.blob_private_dns_zone_id
+  existing_blob_private_dns_zone_id = var.existing_blob_private_dns_zone_id
 }
 
 # Used for encrypting function env secrets. Function environment secrets can be specified

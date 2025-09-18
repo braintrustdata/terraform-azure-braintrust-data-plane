@@ -74,20 +74,20 @@ variable "private_endpoint_subnet_cidr" {
 }
 
 
-variable "pg_private_dns_zone_id" {
-  description = "private dns zone id for pg if it's already exists"
+variable "existing_postgres_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for postgres private endpoint. Only needed if you want to deploy two data planes into the same VNet."
   type        = string
   default     = ""
 }
 
-variable "blob_private_dns_zone_id" {
-  description = "private dns zone id for blob if it's already exists"
+variable "existing_blob_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for blob storage private endpoint. Only needed if you want to deploy two data planes into the same VNet."
   type        = string
   default     = ""
 }
 
-variable "redis_private_dns_zone_id" {
-  description = "private dns zone id for redis if it's already exists"
+variable "existing_redis_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for redis private endpoint. Only needed if you want to deploy two data planes into the same VNet."
   type        = string
   default     = ""
 }
