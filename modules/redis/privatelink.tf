@@ -7,7 +7,7 @@ resource "azurerm_private_endpoint" "redis" {
 
   private_dns_zone_group {
     name                 = "redis"
-    private_dns_zone_ids = [azurerm_private_dns_zone.redis.id]
+    private_dns_zone_ids = [var.redis_private_dns_zone_id != "" ? var.redis_private_dns_zone_id : azurerm_private_dns_zone.redis[0].id]
   }
 
   private_service_connection {
@@ -20,13 +20,15 @@ resource "azurerm_private_endpoint" "redis" {
 
 resource "azurerm_private_dns_zone" "redis" {
   # https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns
+  count               = var.redis_private_dns_zone_id == "" ? 1 : 0
   name                = "redis.cache.windows.net"
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
+  count                 = var.redis_private_dns_zone_id == "" ? 1 : 0
   name                  = "redis"
-  private_dns_zone_name = azurerm_private_dns_zone.redis.name
+  private_dns_zone_name = azurerm_private_dns_zone.redis[0].name
   virtual_network_id    = var.virtual_network_id
   resource_group_name   = var.resource_group_name
 }

@@ -51,3 +51,8 @@ variable "key_vault_id" {
   description = "The ID of the Key Vault where Redis secrets will be stored"
   type        = string
 }
+
+variable "redis_private_dns_zone_id" {
+  description = "id of private dns zone for redis if it's already exists"
+  type        = string
+}

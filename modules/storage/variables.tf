@@ -33,3 +33,8 @@ variable "create_storage_container" {
   type        = bool
   default     = true
 }
+
+variable "blob_private_dns_zone_id" {
+  description = "id of private dns zone for blob storage if it's already exists"
+  type        = string
+}

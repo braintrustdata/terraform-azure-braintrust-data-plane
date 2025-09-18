@@ -52,3 +52,8 @@ variable "key_vault_id" {
   description = "The ID of the Key Vault to use for database encryption and secrets"
   type        = string
 }
+
+variable "pg_private_dns_zone_id" {
+  description = "The ID of the existing private dns zone"
+  type        = string
+}

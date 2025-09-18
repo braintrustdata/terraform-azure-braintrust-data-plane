@@ -1,12 +1,14 @@
 resource "azurerm_private_dns_zone" "main" {
+  count               = var.pg_private_dns_zone_id == "" ? 1 : 0
   name                = "privatelink.postgres.database.azure.com"
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "main" {
+  count                 = var.pg_private_dns_zone_id == "" ? 1 : 0
   name                  = local.db_name
   resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.main.name
+  private_dns_zone_name = azurerm_private_dns_zone.main[0].name
   virtual_network_id    = var.vnet_id
 }
 
@@ -18,7 +20,7 @@ resource "azurerm_private_endpoint" "main" {
 
   private_dns_zone_group {
     name                 = local.db_name
-    private_dns_zone_ids = [azurerm_private_dns_zone.main.id]
+    private_dns_zone_ids = [var.pg_private_dns_zone_id != "" ? var.pg_private_dns_zone_id : azurerm_private_dns_zone.main[0].id]
   }
 
   private_service_connection {
