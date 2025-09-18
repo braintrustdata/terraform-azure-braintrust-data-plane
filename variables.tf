@@ -73,20 +73,25 @@ variable "private_endpoint_subnet_cidr" {
   default     = null
 }
 
+
 variable "pg_private_dns_zone_id" {
   description = "private dns zone id for pg if it's already exists"
   type        = string
+  default     = ""
 }
 
 variable "blob_private_dns_zone_id" {
   description = "private dns zone id for blob if it's already exists"
   type        = string
+  default     = ""
 }
 
 variable "redis_private_dns_zone_id" {
   description = "private dns zone id for redis if it's already exists"
   type        = string
+  default     = ""
 }
+
 
 ## AKS
 variable "create_aks_cluster" {
