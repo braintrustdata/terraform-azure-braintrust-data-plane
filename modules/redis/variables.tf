@@ -51,3 +51,9 @@ variable "key_vault_id" {
   description = "The ID of the Key Vault where Redis secrets will be stored"
   type        = string
 }
+
+variable "existing_redis_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for redis private endpoint. Only needed if you want to deploy two data planes into the same VNet. Leave blank to auto-create one."
+  type        = string
+  default     = ""
+}

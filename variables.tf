@@ -73,6 +73,26 @@ variable "private_endpoint_subnet_cidr" {
   default     = null
 }
 
+
+variable "existing_postgres_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for postgres private endpoint. Only needed if you want to deploy two data planes into the same VNet."
+  type        = string
+  default     = ""
+}
+
+variable "existing_blob_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for blob storage private endpoint. Only needed if you want to deploy two data planes into the same VNet."
+  type        = string
+  default     = ""
+}
+
+variable "existing_redis_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for redis private endpoint. Only needed if you want to deploy two data planes into the same VNet."
+  type        = string
+  default     = ""
+}
+
+
 ## AKS
 variable "create_aks_cluster" {
   description = "Create an AKS cluster"

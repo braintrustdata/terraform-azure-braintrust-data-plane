@@ -52,3 +52,9 @@ variable "key_vault_id" {
   description = "The ID of the Key Vault to use for database encryption and secrets"
   type        = string
 }
+
+variable "existing_postgres_private_dns_zone_id" {
+  description = "Advanced: Use an existing private dns zone id for postgres private endpoint. Only needed if you want to deploy two data planes into the same VNet. Leave blank to auto-create one."
+  type        = string
+  default     = ""
+}
