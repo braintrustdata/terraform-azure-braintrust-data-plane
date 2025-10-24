@@ -31,11 +31,6 @@ variable "user_pool_max_count" {
   default     = 10
 }
 
-variable "vnet_name" {
-  description = "Name of the existing VNet"
-  type        = string
-}
-
 variable "services_subnet_id" {
   description = "ID of the subnet for AKS"
   type        = string

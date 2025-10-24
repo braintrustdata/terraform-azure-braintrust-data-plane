@@ -6,11 +6,6 @@ data "azurerm_resource_group" "main" {
   name = var.resource_group_name
 }
 
-data "azurerm_virtual_network" "main" {
-  name                = var.vnet_name
-  resource_group_name = var.resource_group_name
-}
-
 resource "azurerm_user_assigned_identity" "aks_identity" {
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
