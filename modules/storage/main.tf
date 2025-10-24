@@ -4,7 +4,6 @@ locals {
   storage_account_name            = "btstorage${random_string.storage_account_suffix.result}"
   key_name                        = "${var.deployment_name}-storage-key"
   private_dns_zone_name           = "privatelink.blob.core.windows.net"
-  connection_string_secret_name   = "azure-storage-connection-string"
   azure_storage_connection_string = "BlobEndpoint=${azurerm_storage_account.main.primary_blob_endpoint};"
 }
 
@@ -137,8 +136,6 @@ resource "azurerm_private_endpoint" "storage" {
     azurerm_private_dns_zone_virtual_network_link.blob
   ]
 }
-
-data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault_secret" "azure-storage-connection-string" {
   # Note: This does not actually contain a secret account key. It is stored in the key vault as a secret only because

@@ -6,14 +6,9 @@ data "azurerm_resource_group" "main" {
   name = var.resource_group_name
 }
 
-data "azurerm_virtual_network" "main" {
-  name                = var.vnet_name
-  resource_group_name = var.resource_group_name
-}
-
 resource "azurerm_user_assigned_identity" "aks_identity" {
   resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  location            = var.location
   name                = "${local.cluster_name}-identity"
 }
 
@@ -30,7 +25,7 @@ resource "azurerm_role_assignment" "aks_identity" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  location            = data.azurerm_resource_group.main.location
+  location            = var.location
   resource_group_name = data.azurerm_resource_group.main.name
   name                = local.cluster_name
   identity {
@@ -140,7 +135,7 @@ resource "azurerm_federated_identity_credential" "brainstore" {
 # If there is demand we can parameterize this.
 # resource "azurerm_private_dns_zone" "aks" {
 #   resource_group_name = var.resource_group_name
-#   name                = "privatelink.${data.azurerm_resource_group.main.location}.azmk8s.io"
+#   name                = "privatelink.${var.location}.azmk8s.io"
 # }
 
 # resource "azurerm_private_dns_zone_virtual_network_link" "aksdns_in_aksvnet" {

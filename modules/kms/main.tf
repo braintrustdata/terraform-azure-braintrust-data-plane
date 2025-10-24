@@ -11,7 +11,7 @@ resource "azurerm_key_vault" "main" {
   purge_protection_enabled    = true
   # Required for Terraform to work. Also, the default.
   public_network_access_enabled = true
-  enable_rbac_authorization     = true
+  rbac_authorization_enabled    = true
 
   tags = {
     deployment = var.deployment_name
