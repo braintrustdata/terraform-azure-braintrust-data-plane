@@ -1,8 +1,6 @@
 locals {
   key_vault_id               = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
   vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
-  vnet_name                  = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_name : var.existing_vnet.name
-  vnet_address_space         = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_address_space : var.existing_vnet.address_space
   services_subnet_id         = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
   private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
 }
@@ -43,7 +41,6 @@ module "k8s" {
 
   deployment_name     = var.deployment_name
   resource_group_name = azurerm_resource_group.main.name
-  vnet_name           = local.vnet_name
   services_subnet_id  = local.services_subnet_id
   user_pool_vm_size   = var.aks_user_pool_vm_size
   user_pool_max_count = var.aks_user_pool_max_count
