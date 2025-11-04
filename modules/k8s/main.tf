@@ -2,12 +2,8 @@ locals {
   cluster_name = "${var.deployment_name}-${var.cluster_name}"
 }
 
-data "azurerm_resource_group" "main" {
-  name = var.resource_group_name
-}
-
 resource "azurerm_user_assigned_identity" "aks_identity" {
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   location            = var.location
   name                = "${local.cluster_name}-identity"
 }
@@ -18,7 +14,7 @@ resource "azurerm_role_assignment" "aks_identity" {
     "Azure Kubernetes Service RBAC Cluster Admin",
     "Key Vault Secrets User"
   ])
-  scope                = data.azurerm_resource_group.main.id
+  scope                = var.resource_group_id
   role_definition_name = each.value
   principal_id         = azurerm_user_assigned_identity.aks_identity.principal_id
   principal_type       = "ServicePrincipal"
@@ -26,7 +22,7 @@ resource "azurerm_role_assignment" "aks_identity" {
 
 resource "azurerm_kubernetes_cluster" "aks" {
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   name                = local.cluster_name
   identity {
     type = "UserAssigned"
@@ -114,7 +110,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
 
 resource "azurerm_federated_identity_credential" "braintrust_api" {
   name                = "${local.cluster_name}-braintrust-api"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
   parent_id           = azurerm_user_assigned_identity.aks_identity.id
@@ -123,7 +119,7 @@ resource "azurerm_federated_identity_credential" "braintrust_api" {
 
 resource "azurerm_federated_identity_credential" "brainstore" {
   name                = "${local.cluster_name}-brainstore"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
   parent_id           = azurerm_user_assigned_identity.aks_identity.id

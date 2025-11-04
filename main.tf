@@ -41,6 +41,7 @@ module "k8s" {
 
   deployment_name     = var.deployment_name
   resource_group_name = azurerm_resource_group.main.name
+  resource_group_id   = azurerm_resource_group.main.id
   services_subnet_id  = local.services_subnet_id
   user_pool_vm_size   = var.aks_user_pool_vm_size
   user_pool_max_count = var.aks_user_pool_max_count
