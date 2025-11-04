@@ -14,7 +14,8 @@ provider "azurerm" {
       purge_soft_delete_on_destroy = false
     }
   }
-  subscription_id = var.azure_subscription_id
+  subscription_id     = var.azure_subscription_id
+  storage_use_azuread = true
 }
 
 # Deploy complete Braintrust data plane
