@@ -194,3 +194,23 @@ output "braintrust_org_name" {
   description = "The name of the Braintrust organization"
 }
 
+output "front_door_endpoint_url" {
+  value       = var.enable_front_door ? module.front_door[0].front_door_endpoint_url : null
+  description = "The URL of the Azure Front Door endpoint"
+}
+
+output "front_door_endpoint_hostname" {
+  value       = var.enable_front_door ? module.front_door[0].front_door_endpoint_hostname : null
+  description = "The hostname of the Azure Front Door endpoint"
+}
+
+output "front_door_profile_id" {
+  value       = var.enable_front_door ? module.front_door[0].front_door_profile_id : null
+  description = "The ID of the Azure Front Door profile"
+}
+
+output "private_link_service_id" {
+  value       = var.enable_front_door ? module.front_door[0].private_link_service_id : null
+  description = "The ID of the Private Link Service"
+}
+

@@ -47,3 +47,13 @@ output "connect_to_cluster" {
   description = "Command to connect to the AKS cluster"
   value       = "az aks get-credentials --resource-group ${module.braintrust.resource_group_name} --name ${module.braintrust.aks_cluster_name}"
 }
+
+output "front_door_endpoint_url" {
+  description = "URL of the Azure Front Door endpoint (if enabled)"
+  value       = module.braintrust.front_door_endpoint_url
+}
+
+output "front_door_endpoint_hostname" {
+  description = "Hostname of the Azure Front Door endpoint (if enabled)"
+  value       = module.braintrust.front_door_endpoint_hostname
+}

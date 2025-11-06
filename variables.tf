@@ -176,3 +176,28 @@ variable "create_storage_container" {
   type        = bool
   default     = true
 }
+
+## Front Door
+variable "enable_front_door" {
+  description = "Enable Azure Front Door with Private Link connectivity to the API workload"
+  type        = bool
+  default     = false
+}
+
+variable "front_door_api_backend_address" {
+  description = "IP address or hostname of the API backend workload (required if enable_front_door is true)"
+  type        = string
+  default     = null
+}
+
+variable "front_door_api_backend_port" {
+  description = "Port for the API backend workload"
+  type        = number
+  default     = 8000
+}
+
+variable "front_door_load_balancer_frontend_ip_config_id" {
+  description = "Resource ID of the AKS internal load balancer frontend IP configuration (required if enable_front_door is true)"
+  type        = string
+  default     = null
+}

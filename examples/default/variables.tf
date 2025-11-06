@@ -35,3 +35,21 @@ variable "location" {
   type        = string
   default     = "eastus"
 }
+
+variable "enable_front_door" {
+  description = "Enable Azure Front Door with Private Link connectivity"
+  type        = bool
+  default     = false
+}
+
+variable "front_door_api_backend_address" {
+  description = "IP address of the AKS internal load balancer for the API service (required for Front Door)"
+  type        = string
+  default     = null
+}
+
+variable "front_door_load_balancer_frontend_ip_config_id" {
+  description = "Resource ID of the AKS internal load balancer frontend IP configuration (required for Front Door)"
+  type        = string
+  default     = null
+}

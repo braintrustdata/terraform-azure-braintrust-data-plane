@@ -32,4 +32,9 @@ module "braintrust" {
 
   # AKS configuration
   create_aks_cluster = true
+
+  enable_front_door                                  = var.enable_front_door
+  front_door_api_backend_address                     = var.front_door_api_backend_address
+  front_door_load_balancer_frontend_ip_config_id     = var.front_door_load_balancer_frontend_ip_config_id
+
 }

@@ -1,8 +1,9 @@
 locals {
-  key_vault_id               = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
-  vnet_id                    = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
-  services_subnet_id         = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
-  private_endpoint_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
+  key_vault_id                   = var.key_vault_id != null ? var.key_vault_id : module.kms[0].key_vault_id
+  vnet_id                        = var.existing_vnet.id == "" ? module.main_vnet[0].vnet_id : var.existing_vnet.id
+  services_subnet_id             = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
+  private_endpoint_subnet_id     = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
+  private_link_service_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_link_service_subnet_id : null
 }
 
 resource "azurerm_resource_group" "main" {
@@ -33,6 +34,7 @@ module "main_vnet" {
   vnet_address_space_cidr      = var.vnet_address_space_cidr
   services_subnet_cidr         = var.services_subnet_cidr
   private_endpoint_subnet_cidr = var.private_endpoint_subnet_cidr
+  enable_front_door            = var.enable_front_door
 }
 
 module "k8s" {
@@ -99,6 +101,19 @@ module "storage" {
   create_storage_container   = var.create_storage_container
 
   existing_blob_private_dns_zone_id = var.existing_blob_private_dns_zone_id
+}
+
+module "front_door" {
+  source = "./modules/front_door"
+  count  = var.enable_front_door ? 1 : 0
+
+  resource_group_name                 = azurerm_resource_group.main.name
+  deployment_name                     = var.deployment_name
+  location                            = var.location
+  api_backend_address                 = var.front_door_api_backend_address
+  api_backend_port                    = var.front_door_api_backend_port
+  load_balancer_frontend_ip_config_id = var.front_door_load_balancer_frontend_ip_config_id
+  private_link_service_subnet_id      = local.private_link_service_subnet_id
 }
 
 # Used for encrypting function env secrets. Function environment secrets can be specified
