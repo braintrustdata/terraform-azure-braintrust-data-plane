@@ -58,7 +58,7 @@ variable "existing_vnet" {
 variable "vnet_address_space_cidr" {
   type        = string
   description = "Address space for the VNet"
-  default     = null
+  default     = "10.175.0.0/20" # 4096 IP addresses
 }
 
 variable "services_subnet_cidr" {
