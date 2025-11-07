@@ -1,10 +1,10 @@
 locals {
-  # Calculate default subnet CIDRs from the VNet address space. # Carve out two subnets, one is half the vnet and the other is tiny
+  # Calculate default subnet CIDRs from the VNet address space.
   calculated_subnet_cidrs = cidrsubnets(var.vnet_address_space_cidr, 1, 6, 6)
   # Example: 10.175.0.0/20 (4096 IPs)
-  #   Subnet 1 range: 10.175.0.0/21 -> 10.175.0.0 - 10.175.7.255 (2048 IPs)
-  #   Subnet 2 range: 10.175.8.0/26 -> 10.175.8.0 - 10.175.8.63 (64 IPs)
-
+  #   Subnet 1 range: 10.175.0.0/21  ->  10.175.0.0  - 10.175.7.255 (2048 IPs)
+  #   Subnet 2 range: 10.175.8.0/26  ->  10.175.8.0  - 10.175.8.63 (64 IPs)
+  #   Subnet 3 range: 10.175.8.64/27 ->  10.175.8.64 - 10.175.8.127 (64 IPs)
   # Example: 10.100.0.0/18 (16384 IPs)
   #   Subnet 1 range: 10.100.0.0/19 -> 10.100.0.0 - 10.100.3.255 (8192 IPs)
   #   Subnet 2 range: 10.100.4.0/24 -> 10.100.4.0 - 10.100.4.255 (256 IPs)

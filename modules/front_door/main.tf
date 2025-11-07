@@ -1,6 +1,3 @@
-# Get current subscription for auto-approval
-data "azurerm_client_config" "current" {}
-
 resource "azurerm_private_link_service" "aks_api" {
   name                = "${var.deployment_name}-aks-api-pls"
   resource_group_name = var.resource_group_name
