@@ -2,7 +2,7 @@ resource "azurerm_virtual_network" "main" {
   name                = "${var.deployment_name}-${var.vnet_name}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  address_space       = [local.vnet_address_space_cidr]
+  address_space       = [var.vnet_address_space_cidr]
   lifecycle {
     ignore_changes = [address_space]
   }
