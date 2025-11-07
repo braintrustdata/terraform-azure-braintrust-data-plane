@@ -31,7 +31,6 @@ variable "vnet_name" {
 variable "vnet_address_space_cidr" {
   type        = string
   description = "CIDR block for the VNet"
-  default     = null
 }
 
 variable "services_subnet_cidr" {
