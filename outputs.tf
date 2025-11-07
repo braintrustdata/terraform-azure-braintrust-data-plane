@@ -184,6 +184,16 @@ output "aks_identity_object_id" {
   description = "The object ID of the AKS identity"
 }
 
+output "workload_identity_client_id" {
+  value       = var.create_aks_cluster ? module.k8s[0].workload_identity_client_id : null
+  description = "The client ID of the Braintrust workload identity (used in Kubernetes service accounts)"
+}
+
+output "workload_identity_principal_id" {
+  value       = var.create_aks_cluster ? module.k8s[0].workload_identity_principal_id : null
+  description = "The principal ID of the Braintrust workload identity"
+}
+
 output "azure_tenant_id" {
   value       = data.azurerm_client_config.current.tenant_id
   description = "The tenant ID of the Azure subscription"

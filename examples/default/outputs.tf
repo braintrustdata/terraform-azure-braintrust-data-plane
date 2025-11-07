@@ -57,3 +57,13 @@ output "front_door_endpoint_hostname" {
   description = "Hostname of the Azure Front Door endpoint (if enabled)"
   value       = module.braintrust.front_door_endpoint_hostname
 }
+
+output "workload_identity_client_id" {
+  description = "Client ID of the Braintrust workload identity (use this for Kubernetes service account annotations)"
+  value       = module.braintrust.workload_identity_client_id
+}
+
+output "azure_tenant_id" {
+  description = "Azure tenant ID (use this for Kubernetes workload identity configuration)"
+  value       = module.braintrust.azure_tenant_id
+}

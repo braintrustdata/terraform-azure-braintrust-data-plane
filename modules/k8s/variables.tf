@@ -47,3 +47,13 @@ variable "system_pool_vm_size" {
   default     = "Standard_D2as_v6"
 }
 
+variable "key_vault_id" {
+  description = "ID of the Key Vault to grant access to"
+  type        = string
+}
+
+variable "storage_account_id" {
+  description = "ID of the Storage Account to grant access to"
+  type        = string
+}
+

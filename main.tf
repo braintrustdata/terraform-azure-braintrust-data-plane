@@ -49,6 +49,8 @@ module "k8s" {
   user_pool_max_count = var.aks_user_pool_max_count
   system_pool_vm_size = var.aks_system_pool_vm_size
   location            = var.location
+  key_vault_id        = local.key_vault_id
+  storage_account_id  = module.storage.storage_account_id
 }
 
 module "database" {

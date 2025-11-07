@@ -97,6 +97,29 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   }
 }
 
+#----------------------------------------------------------------------------------------------
+# Braintrust Workload Identity
+#----------------------------------------------------------------------------------------------
+# Separate managed identity for Braintrust workloads with specific permissions
+# This identity is used by the Braintrust pods to access Azure resources like Key Vault and Storage
+
+resource "azurerm_user_assigned_identity" "braintrust_service_account" {
+  name                = "${local.cluster_name}-braintrust-sa"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_role_assignment" "braintrust_key_vault" {
+  scope                = var.key_vault_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_user_assigned_identity.braintrust_service_account.principal_id
+}
+
+resource "azurerm_role_assignment" "braintrust_storage" {
+  scope                = var.storage_account_id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.braintrust_service_account.principal_id
+}
 
 #----------------------------------------------------------------------------------------------
 # Federated identity credentials
@@ -113,7 +136,7 @@ resource "azurerm_federated_identity_credential" "braintrust_api" {
   resource_group_name = var.resource_group_name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  parent_id           = azurerm_user_assigned_identity.aks_identity.id
+  parent_id           = azurerm_user_assigned_identity.braintrust_service_account.id
   subject             = "system:serviceaccount:braintrust:braintrust-api"
 }
 
@@ -122,7 +145,7 @@ resource "azurerm_federated_identity_credential" "brainstore" {
   resource_group_name = var.resource_group_name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  parent_id           = azurerm_user_assigned_identity.aks_identity.id
+  parent_id           = azurerm_user_assigned_identity.braintrust_service_account.id
   subject             = "system:serviceaccount:braintrust:brainstore"
 }
 
