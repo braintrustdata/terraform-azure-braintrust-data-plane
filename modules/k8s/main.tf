@@ -100,6 +100,8 @@ resource "azurerm_kubernetes_cluster_extension" "container_storage" {
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
   kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
   auto_scaling_enabled        = true
+  os_disk_type                = "Ephemeral"
+  kubelet_disk_type           = "OS"
   name                        = "user"
   mode                        = "User"
   min_count                   = 2
