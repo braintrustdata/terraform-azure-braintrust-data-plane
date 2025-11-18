@@ -3,8 +3,6 @@ resource "azurerm_private_link_service" "aks_api" {
   resource_group_name = var.resource_group_name
   location            = var.location
 
-  auto_approval_subscription_ids = [data.azurerm_client_config.current.subscription_id]
-
   nat_ip_configuration {
     name      = "primary"
     subnet_id = var.private_link_service_subnet_id
