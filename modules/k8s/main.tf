@@ -78,6 +78,25 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
+# This is required for the container storage extension to be registered.
+resource "azurerm_resource_provider_registration" "kubernetes_configuration" {
+  name = "Microsoft.KubernetesConfiguration"
+}
+
+# This extension enables ephemeral local disks on the nodes.
+resource "azurerm_kubernetes_cluster_extension" "container_storage" {
+  depends_on     = [azurerm_resource_provider_registration.kubernetes_configuration]
+  name           = "microsoft-azurecontainerstorage"
+  cluster_id     = azurerm_kubernetes_cluster.aks.id
+  extension_type = "microsoft.azurecontainerstorage"
+
+  configuration_settings = {
+    "enable-azure-container-storage" : "ephemeralDisk",
+    "storage-pool-option" : "NVMe",
+    "azure-container-storage-nodepools" : azurerm_kubernetes_cluster_node_pool.user.name
+  }
+}
+
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
   kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
   auto_scaling_enabled        = true
