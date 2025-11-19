@@ -78,15 +78,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-# This is required for the container storage extension to be registered.
-resource "azurerm_resource_provider_registration" "kubernetes_configuration" {
-  name = "Microsoft.KubernetesConfiguration"
-}
-
 # This extension enables ephemeral local disks on the nodes.
+# They will be configured with RAID0 automatically if there are multiple disks.
 resource "azurerm_kubernetes_cluster_extension" "container_storage" {
-  depends_on     = [azurerm_resource_provider_registration.kubernetes_configuration]
-  name           = "microsoft-azurecontainerstorage"
+  name           = "containerstorage"
   cluster_id     = azurerm_kubernetes_cluster.aks.id
   extension_type = "microsoft.azurecontainerstorage"
 
