@@ -81,15 +81,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
 # This extension enables ephemeral local disks on the nodes.
 # They will be configured with RAID0 automatically if there are multiple disks.
 resource "azurerm_kubernetes_cluster_extension" "container_storage" {
-  name           = "containerstorage"
+  name           = "acstor"
   cluster_id     = azurerm_kubernetes_cluster.aks.id
-  extension_type = "microsoft.azurecontainerstorage"
-
-  configuration_settings = {
-    "enable-azure-container-storage" : "ephemeralDisk",
-    "storage-pool-option" : "NVMe",
-    "azure-container-storage-nodepools" : azurerm_kubernetes_cluster_node_pool.user.name
-  }
+  extension_type = "microsoft.azurecontainerstoragev2"
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
