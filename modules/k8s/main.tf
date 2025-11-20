@@ -86,19 +86,45 @@ resource "azurerm_kubernetes_cluster_extension" "container_storage" {
   extension_type = "microsoft.azurecontainerstoragev2"
 }
 
-resource "azurerm_kubernetes_cluster_node_pool" "user" {
-  kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
-  auto_scaling_enabled        = true
-  os_disk_type                = "Ephemeral"
+resource "azurerm_kubernetes_cluster_node_pool" "brainstore" {
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+  auto_scaling_enabled  = true
+  # Using ephemeral prevents the first temp disk from being used for a large RAID0 volume for brainstore. Use Managed instead.
+  os_disk_type                = "Managed"
   kubelet_disk_type           = "OS"
-  name                        = "user"
+  name                        = "brainstore"
   mode                        = "User"
   min_count                   = 2
-  max_count                   = var.user_pool_max_count
+  max_count                   = var.brainstore_pool_max_count
   node_count                  = 2
-  vm_size                     = var.user_pool_vm_size
+  vm_size                     = var.brainstore_pool_vm_size
   vnet_subnet_id              = var.services_subnet_id
-  temporary_name_for_rotation = "userrotate"
+  temporary_name_for_rotation = "bstorerotate"
+  upgrade_settings {
+    drain_timeout_in_minutes      = 0
+    max_surge                     = "10%"
+    node_soak_duration_in_minutes = 0
+  }
+  lifecycle {
+    ignore_changes = [
+      node_count
+    ]
+  }
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "services" {
+  kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
+  auto_scaling_enabled        = true
+  os_disk_type                = "Managed"
+  kubelet_disk_type           = "OS"
+  name                        = "services"
+  mode                        = "User"
+  min_count                   = 2
+  max_count                   = var.services_pool_max_count
+  node_count                  = 2
+  vm_size                     = var.services_pool_vm_size
+  vnet_subnet_id              = var.services_subnet_id
+  temporary_name_for_rotation = "svcsrotate"
   upgrade_settings {
     drain_timeout_in_minutes      = 0
     max_surge                     = "10%"

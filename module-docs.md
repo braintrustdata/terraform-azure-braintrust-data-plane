@@ -25,6 +25,38 @@ Type: `string`
 
 The following input variables are optional (have default values):
 
+### <a name="input_aks_brainstore_pool_max_count"></a> [aks\_brainstore\_pool\_max\_count](#input\_aks\_brainstore\_pool\_max\_count)
+
+Description: Maximum number of nodes in the brainstore pool
+
+Type: `number`
+
+Default: `10`
+
+### <a name="input_aks_brainstore_pool_vm_size"></a> [aks\_brainstore\_pool\_vm\_size](#input\_aks\_brainstore\_pool\_vm\_size)
+
+Description: VM size for the brainstore node pool. Must be a SKU with a temporary local storage SSD.
+
+Type: `string`
+
+Default: `"Standard_D32ds_v6"`
+
+### <a name="input_aks_services_pool_max_count"></a> [aks\_services\_pool\_max\_count](#input\_aks\_services\_pool\_max\_count)
+
+Description: Maximum number of nodes in the services pool
+
+Type: `number`
+
+Default: `10`
+
+### <a name="input_aks_services_pool_vm_size"></a> [aks\_services\_pool\_vm\_size](#input\_aks\_services\_pool\_vm\_size)
+
+Description: VM size for the services node pool. Must be a SKU with a temporary local storage SSD.
+
+Type: `string`
+
+Default: `"Standard_D16s_v6"`
+
 ### <a name="input_aks_system_pool_vm_size"></a> [aks\_system\_pool\_vm\_size](#input\_aks\_system\_pool\_vm\_size)
 
 Description: VM size for the system nodes
@@ -32,22 +64,6 @@ Description: VM size for the system nodes
 Type: `string`
 
 Default: `"Standard_D2as_v6"`
-
-### <a name="input_aks_user_pool_max_count"></a> [aks\_user\_pool\_max\_count](#input\_aks\_user\_pool\_max\_count)
-
-Description: Maximum number of nodes in the user pool
-
-Type: `number`
-
-Default: `10`
-
-### <a name="input_aks_user_pool_vm_size"></a> [aks\_user\_pool\_vm\_size](#input\_aks\_user\_pool\_vm\_size)
-
-Description: VM size for the user nodes that run the application. Must be a SKU with a temporary local storage SSD.
-
-Type: `string`
-
-Default: `"Standard_D16ds_v6"`
 
 ### <a name="input_create_aks_cluster"></a> [create\_aks\_cluster](#input\_create\_aks\_cluster)
 

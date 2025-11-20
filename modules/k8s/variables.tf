@@ -24,14 +24,26 @@ variable "cluster_name" {
   default     = "aks"
 }
 
-variable "user_pool_vm_size" {
-  description = "VM size for the nodes"
+variable "brainstore_pool_vm_size" {
+  description = "VM size for the brainstore node pool"
   type        = string
-  default     = "Standard_D16ds_v6"
+  default     = "Standard_D32ds_v6"
 }
 
-variable "user_pool_max_count" {
-  description = "Maximum number of nodes in the user pool"
+variable "brainstore_pool_max_count" {
+  description = "Maximum number of nodes in the brainstore pool"
+  type        = number
+  default     = 10
+}
+
+variable "services_pool_vm_size" {
+  description = "VM size for the services node pool"
+  type        = string
+  default     = "Standard_D16s_v6"
+}
+
+variable "services_pool_max_count" {
+  description = "Maximum number of nodes in the services pool"
   type        = number
   default     = 10
 }

@@ -107,14 +107,26 @@ variable "aks_system_pool_vm_size" {
   default     = "Standard_D2as_v6"
 }
 
-variable "aks_user_pool_vm_size" {
-  description = "VM size for the user nodes that run the application. Must be a SKU with a temporary local storage SSD."
+variable "aks_brainstore_pool_vm_size" {
+  description = "VM size for the brainstore node pool. Must be a SKU with a temporary local storage SSD."
   type        = string
-  default     = "Standard_D16ds_v6"
+  default     = "Standard_D32ds_v6"
 }
 
-variable "aks_user_pool_max_count" {
-  description = "Maximum number of nodes in the user pool"
+variable "aks_brainstore_pool_max_count" {
+  description = "Maximum number of nodes in the brainstore pool"
+  type        = number
+  default     = 10
+}
+
+variable "aks_services_pool_vm_size" {
+  description = "VM size for the services node pool. Must be a SKU with a temporary local storage SSD."
+  type        = string
+  default     = "Standard_D16s_v6"
+}
+
+variable "aks_services_pool_max_count" {
+  description = "Maximum number of nodes in the services pool"
   type        = number
   default     = 10
 }

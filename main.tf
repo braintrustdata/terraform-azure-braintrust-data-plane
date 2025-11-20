@@ -41,16 +41,18 @@ module "k8s" {
   source = "./modules/k8s"
   count  = var.create_aks_cluster ? 1 : 0
 
-  deployment_name     = var.deployment_name
-  resource_group_name = azurerm_resource_group.main.name
-  resource_group_id   = azurerm_resource_group.main.id
-  services_subnet_id  = local.services_subnet_id
-  user_pool_vm_size   = var.aks_user_pool_vm_size
-  user_pool_max_count = var.aks_user_pool_max_count
-  system_pool_vm_size = var.aks_system_pool_vm_size
-  location            = var.location
-  key_vault_id        = local.key_vault_id
-  storage_account_id  = module.storage.storage_account_id
+  deployment_name           = var.deployment_name
+  resource_group_name       = azurerm_resource_group.main.name
+  resource_group_id         = azurerm_resource_group.main.id
+  services_subnet_id        = local.services_subnet_id
+  brainstore_pool_vm_size   = var.aks_brainstore_pool_vm_size
+  brainstore_pool_max_count = var.aks_brainstore_pool_max_count
+  services_pool_vm_size     = var.aks_services_pool_vm_size
+  services_pool_max_count   = var.aks_services_pool_max_count
+  system_pool_vm_size       = var.aks_system_pool_vm_size
+  location                  = var.location
+  key_vault_id              = local.key_vault_id
+  storage_account_id        = module.storage.storage_account_id
 }
 
 module "database" {
