@@ -2,12 +2,8 @@ locals {
   cluster_name = "${var.deployment_name}-${var.cluster_name}"
 }
 
-data "azurerm_resource_group" "main" {
-  name = var.resource_group_name
-}
-
 resource "azurerm_user_assigned_identity" "aks_identity" {
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   location            = var.location
   name                = "${local.cluster_name}-identity"
 }
@@ -18,7 +14,7 @@ resource "azurerm_role_assignment" "aks_identity" {
     "Azure Kubernetes Service RBAC Cluster Admin",
     "Key Vault Secrets User"
   ])
-  scope                = data.azurerm_resource_group.main.id
+  scope                = var.resource_group_id
   role_definition_name = each.value
   principal_id         = azurerm_user_assigned_identity.aks_identity.principal_id
   principal_type       = "ServicePrincipal"
@@ -26,7 +22,7 @@ resource "azurerm_role_assignment" "aks_identity" {
 
 resource "azurerm_kubernetes_cluster" "aks" {
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   name                = local.cluster_name
   identity {
     type = "UserAssigned"
@@ -82,18 +78,33 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-resource "azurerm_kubernetes_cluster_node_pool" "user" {
-  kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
-  auto_scaling_enabled        = true
-  name                        = "user"
+# This extension enables ephemeral local disks on the nodes.
+# They will be configured with RAID0 automatically if there are multiple disks.
+resource "azurerm_kubernetes_cluster_extension" "container_storage" {
+  name           = "acstor"
+  cluster_id     = azurerm_kubernetes_cluster.aks.id
+  extension_type = "microsoft.azurecontainerstoragev2"
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "brainstore" {
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+  auto_scaling_enabled  = true
+  # Using ephemeral prevents the first temp disk from being used for a large RAID0 volume for brainstore. Use Managed instead.
+  os_disk_type                = "Managed"
+  kubelet_disk_type           = "OS"
+  name                        = "brainstore"
   mode                        = "User"
   min_count                   = 2
-  max_count                   = var.user_pool_max_count
+  max_count                   = var.brainstore_pool_max_count
   node_count                  = 2
-  vm_size                     = var.user_pool_vm_size
+  vm_size                     = var.brainstore_pool_vm_size
   vnet_subnet_id              = var.services_subnet_id
-  temporary_name_for_rotation = "userrotate"
-
+  temporary_name_for_rotation = "bstorerotate"
+  upgrade_settings {
+    drain_timeout_in_minutes      = 0
+    max_surge                     = "10%"
+    node_soak_duration_in_minutes = 0
+  }
   lifecycle {
     ignore_changes = [
       node_count
@@ -101,6 +112,54 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   }
 }
 
+resource "azurerm_kubernetes_cluster_node_pool" "services" {
+  kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
+  auto_scaling_enabled        = true
+  os_disk_type                = "Managed"
+  kubelet_disk_type           = "OS"
+  name                        = "services"
+  mode                        = "User"
+  min_count                   = 2
+  max_count                   = var.services_pool_max_count
+  node_count                  = 2
+  vm_size                     = var.services_pool_vm_size
+  vnet_subnet_id              = var.services_subnet_id
+  temporary_name_for_rotation = "svcsrotate"
+  upgrade_settings {
+    drain_timeout_in_minutes      = 0
+    max_surge                     = "10%"
+    node_soak_duration_in_minutes = 0
+  }
+  lifecycle {
+    ignore_changes = [
+      node_count
+    ]
+  }
+}
+
+#----------------------------------------------------------------------------------------------
+# Braintrust Workload Identity
+#----------------------------------------------------------------------------------------------
+# Separate managed identity for Braintrust workloads with specific permissions
+# This identity is used by the Braintrust pods to access Azure resources like Key Vault and Storage
+
+resource "azurerm_user_assigned_identity" "braintrust_service_account" {
+  name                = "${local.cluster_name}-braintrust-sa"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_role_assignment" "braintrust_key_vault" {
+  scope                = var.key_vault_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_user_assigned_identity.braintrust_service_account.principal_id
+}
+
+resource "azurerm_role_assignment" "braintrust_storage" {
+  scope                = var.storage_account_id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.braintrust_service_account.principal_id
+}
 
 #----------------------------------------------------------------------------------------------
 # Federated identity credentials
@@ -114,19 +173,19 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
 
 resource "azurerm_federated_identity_credential" "braintrust_api" {
   name                = "${local.cluster_name}-braintrust-api"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  parent_id           = azurerm_user_assigned_identity.aks_identity.id
+  parent_id           = azurerm_user_assigned_identity.braintrust_service_account.id
   subject             = "system:serviceaccount:braintrust:braintrust-api"
 }
 
 resource "azurerm_federated_identity_credential" "brainstore" {
   name                = "${local.cluster_name}-brainstore"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  parent_id           = azurerm_user_assigned_identity.aks_identity.id
+  parent_id           = azurerm_user_assigned_identity.braintrust_service_account.id
   subject             = "system:serviceaccount:braintrust:brainstore"
 }
 

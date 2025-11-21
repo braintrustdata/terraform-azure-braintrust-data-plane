@@ -1,12 +1,4 @@
 terraform {
-  required_version = ">= 1.10.0"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.0"
-    }
-  }
-
   # Store terraform state locally. Only use this for local testing.
   backend "local" {
     path = "terraform.tfstate"
@@ -19,4 +11,12 @@ terraform {
   #     container_name       = "<your-container-name>"
   #     key                  = "braintrust.tfstate"
   # }
+
+  required_version = ">= 1.10.0"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+  }
 }

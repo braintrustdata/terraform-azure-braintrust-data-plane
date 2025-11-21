@@ -1,11 +1,22 @@
 locals {
-  default_vnet_address_space           = "10.175.0.0/20"                                     # 4096 IP addresses
-  default_services_subnet_cidr         = cidrsubnet(local.default_vnet_address_space, 2, 0)  # 1024 IP addresses (x.x.0.0/22)
-  default_private_endpoint_subnet_cidr = cidrsubnet(local.default_vnet_address_space, 7, 33) # 32 IP addresses (x.x.4.96/27)
+  # Calculate default subnet CIDRs from the VNet address space.
+  calculated_subnet_cidrs = cidrsubnets(var.vnet_address_space_cidr, 1, 6, 6)
+  # Example: 10.175.0.0/20 (4096 IPs)
+  #   Subnet 1 range: 10.175.0.0/21  ->  10.175.0.0  - 10.175.7.255 (2048 IPs)
+  #   Subnet 2 range: 10.175.8.0/26  ->  10.175.8.0  - 10.175.8.63 (64 IPs)
+  #   Subnet 3 range: 10.175.8.64/27 ->  10.175.8.64 - 10.175.8.127 (64 IPs)
+  # Example: 10.100.0.0/18 (16384 IPs)
+  #   Subnet 1 range: 10.100.0.0/19 -> 10.100.0.0 - 10.100.3.255 (8192 IPs)
+  #   Subnet 2 range: 10.100.4.0/24 -> 10.100.4.0 - 10.100.4.255 (256 IPs)
+  #   Subnet 3 range: 10.100.5.0/24 -> 10.100.5.0 - 10.100.5.255 (256 IPs)
+  default_services_subnet_cidr             = local.calculated_subnet_cidrs[0]
+  default_private_endpoint_subnet_cidr     = local.calculated_subnet_cidrs[1]
+  default_private_link_service_subnet_cidr = local.calculated_subnet_cidrs[2]
 
-  vnet_address_space_cidr      = var.vnet_address_space_cidr != null ? var.vnet_address_space_cidr : local.default_vnet_address_space
-  services_subnet_cidr         = var.services_subnet_cidr != null ? var.services_subnet_cidr : local.default_services_subnet_cidr
-  private_endpoint_subnet_cidr = var.private_endpoint_subnet_cidr != null ? var.private_endpoint_subnet_cidr : local.default_private_endpoint_subnet_cidr
+  # Use provided subnet CIDRs if given, otherwise use calculated defaults
+  services_subnet_cidr             = var.services_subnet_cidr != null ? var.services_subnet_cidr : local.default_services_subnet_cidr
+  private_endpoint_subnet_cidr     = var.private_endpoint_subnet_cidr != null ? var.private_endpoint_subnet_cidr : local.default_private_endpoint_subnet_cidr
+  private_link_service_subnet_cidr = var.private_link_service_subnet_cidr != null ? var.private_link_service_subnet_cidr : local.default_private_link_service_subnet_cidr
 }
 
 variable "deployment_name" {
@@ -31,7 +42,6 @@ variable "vnet_name" {
 variable "vnet_address_space_cidr" {
   type        = string
   description = "CIDR block for the VNet"
-  default     = null
 }
 
 variable "services_subnet_cidr" {
@@ -44,4 +54,16 @@ variable "private_endpoint_subnet_cidr" {
   type        = string
   description = "CIDR block for the private endpoint subnet"
   default     = null
+}
+
+variable "private_link_service_subnet_cidr" {
+  type        = string
+  description = "CIDR block for the private link service subnet"
+  default     = null
+}
+
+variable "enable_front_door" {
+  type        = bool
+  description = "Enable Private Link Service subnet (required for Azure Front Door)"
+  default     = false
 }

@@ -32,3 +32,13 @@ output "private_endpoint_network_security_group_id" {
   value       = azurerm_network_security_group.private_endpoint.id
   description = "ID of the private endpoint subnet's network security group"
 }
+
+output "private_link_service_subnet_id" {
+  value       = var.enable_front_door ? azurerm_subnet.private_link_service[0].id : null
+  description = "ID of the private link service subnet"
+}
+
+output "private_link_service_network_security_group_id" {
+  value       = var.enable_front_door ? azurerm_network_security_group.private_link_service[0].id : null
+  description = "ID of the private link service subnet's network security group"
+}

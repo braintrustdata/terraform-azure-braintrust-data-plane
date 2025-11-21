@@ -184,6 +184,16 @@ output "aks_identity_object_id" {
   description = "The object ID of the AKS identity"
 }
 
+output "workload_identity_client_id" {
+  value       = var.create_aks_cluster ? module.k8s[0].workload_identity_client_id : null
+  description = "The client ID of the Braintrust workload identity (used in Kubernetes service accounts)"
+}
+
+output "workload_identity_principal_id" {
+  value       = var.create_aks_cluster ? module.k8s[0].workload_identity_principal_id : null
+  description = "The principal ID of the Braintrust workload identity"
+}
+
 output "azure_tenant_id" {
   value       = data.azurerm_client_config.current.tenant_id
   description = "The tenant ID of the Azure subscription"
@@ -192,5 +202,25 @@ output "azure_tenant_id" {
 output "braintrust_org_name" {
   value       = var.braintrust_org_name
   description = "The name of the Braintrust organization"
+}
+
+output "front_door_endpoint_url" {
+  value       = var.enable_front_door ? module.front_door[0].front_door_endpoint_url : null
+  description = "The URL of the Azure Front Door endpoint"
+}
+
+output "front_door_endpoint_hostname" {
+  value       = var.enable_front_door ? module.front_door[0].front_door_endpoint_hostname : null
+  description = "The hostname of the Azure Front Door endpoint"
+}
+
+output "front_door_profile_id" {
+  value       = var.enable_front_door ? module.front_door[0].front_door_profile_id : null
+  description = "The ID of the Azure Front Door profile"
+}
+
+output "private_link_service_id" {
+  value       = var.enable_front_door ? module.front_door[0].private_link_service_id : null
+  description = "The ID of the Private Link Service"
 }
 
