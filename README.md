@@ -40,4 +40,4 @@ Initial creation of the data plane:
   b. Set `front_door_api_backend_address` to the IP address of the AKS internal load balancer
   c. Set `front_door_load_balancer_frontend_ip_config_id` to the resource ID of the AKS internal load balancer frontend IP configuration
   d. Apply terraform
-5. Manually approve the private link service in the Azure portal
+5. Manually approve the private link service in the Azure portal. It should be named `<deployment-name>-aks-api-pls`
