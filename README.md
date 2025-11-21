@@ -113,4 +113,4 @@ The private link service will be named `<deployment-name>-aks-api-pls`.
 terraform apply
 ```
 
-Front Door will often take up to 45 minutes to be fully deployed and available even after your terraform apply is complete. Visiting https://<your-front-door-endpoint-hostname>/ should return a 200 OK response.
+Front Door will often take up to 45 minutes to be fully deployed and available even after your terraform apply is complete. Visiting `https://<your-front-door-endpoint-hostname>/` should return a 200 OK response.
