@@ -52,18 +52,17 @@ kubectl get nodes
 ```
 
 ### 5. Configure Helm Values
-
-Review the `values.yaml` in our helm repo and create your own `helm-values.yaml` file with your own overrides as needed: https://github.com/braintrustdata/helm/blob/main/braintrust/values.yaml
+Review the Helm [README.md](https://github.com/braintrustdata/helm/tree/main/braintrust) and [`values.yaml`](https://github.com/braintrustdata/helm/blob/main/braintrust/values.yaml). Create your own `helm-values.yaml` file with your own overrides as needed.
 
 Set the `api` service to `LoadBalancer` type and set the `annotations` to create an internal load balancer for the API service.
 
 ```yaml
 api:
   service:
-      type: LoadBalancer
-    annotations:
-      service:
-        service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    type: LoadBalancer
+  annotations:
+    service:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 ```
 
 ### 6. Deploy the Braintrust Helm chart
