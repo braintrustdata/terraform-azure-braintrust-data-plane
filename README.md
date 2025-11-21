@@ -18,7 +18,7 @@ The VNet and AKS cluster can be optionally disabled so you can bring your own ne
 
 ## How to use this module
 
-### 1.Copy the example directory to a new directory in your own repository
+### 1. Copy the example directory to a new directory in your own repository
 ```bash
 cp -r terraform-azure-braintrust-data-plane/examples/default <path-in-your-git-repo>/braintrust-data-plane
 ```
@@ -33,7 +33,7 @@ cp -r terraform-azure-braintrust-data-plane/examples/default <path-in-your-git-r
   * Set TF_VAR_brainstore_license_key=your-key in your terraform environment
   * Pass it into terraform as a flag terraform apply -var 'brainstore_license_key=your-key'
   * Add it to an uncommitted terraform.tfvars or .auto.tfvars file.
-* Set `enable_front_door` in `main.tf` to false
+* Set `enable_front_door` in `main.tf` to false. Front Door will be enabled later below.
 
 ### 3. Initialize and apply to create the base infrastructure
 
