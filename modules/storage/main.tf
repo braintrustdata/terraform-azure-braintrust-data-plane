@@ -76,6 +76,25 @@ resource "azurerm_storage_account" "main" {
 
 }
 
+resource "azurerm_storage_management_policy" "main" {
+  storage_account_id = azurerm_storage_account.main.id
+
+  rule {
+    name    = "delete-old-blob-versions"
+    enabled = true
+
+    filters {
+      blob_types = ["blockBlob"]
+    }
+
+    actions {
+      version {
+        delete_after_days_since_creation_greater_than = var.blob_version_retention_days
+      }
+    }
+  }
+}
+
 resource "azurerm_storage_container" "brainstore" {
   count = var.create_storage_container ? 1 : 0
 
