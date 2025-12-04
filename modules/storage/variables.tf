@@ -34,6 +34,12 @@ variable "create_storage_container" {
   default     = true
 }
 
+variable "blob_version_retention_days" {
+  description = "Number of days to retain blob versions before lifecycle cleanup"
+  type        = number
+  default     = 14
+}
+
 variable "existing_blob_private_dns_zone_id" {
   description = "Advanced: Use an existing private dns zone id for blob storage private endpoint. Only needed if you want to deploy two data planes into the same VNet. Leave blank to auto-create one."
   type        = string

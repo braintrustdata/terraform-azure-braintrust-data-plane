@@ -53,7 +53,7 @@ resource "azurerm_storage_account" "main" {
   public_network_access_enabled     = true
   allow_nested_items_to_be_public   = false
   blob_properties {
-    versioning_enabled  = false
+    versioning_enabled  = true
     change_feed_enabled = false
     cors_rule {
       allowed_headers    = ["*"]
@@ -74,6 +74,25 @@ resource "azurerm_storage_account" "main" {
     user_assigned_identity_id = azurerm_user_assigned_identity.storage.id
   }
 
+}
+
+resource "azurerm_storage_management_policy" "main" {
+  storage_account_id = azurerm_storage_account.main.id
+
+  rule {
+    name    = "delete-old-blob-versions"
+    enabled = true
+
+    filters {
+      blob_types = ["blockBlob"]
+    }
+
+    actions {
+      version {
+        delete_after_days_since_creation = var.blob_version_retention_days
+      }
+    }
+  }
 }
 
 resource "azurerm_storage_container" "brainstore" {
