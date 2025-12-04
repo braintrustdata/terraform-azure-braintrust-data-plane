@@ -89,7 +89,7 @@ resource "azurerm_storage_management_policy" "main" {
 
     actions {
       version {
-        delete_after_days_since_creation_greater_than = var.blob_version_retention_days
+        delete_after_days_since_creation = var.blob_version_retention_days
       }
     }
   }
