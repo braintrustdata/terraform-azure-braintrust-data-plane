@@ -65,6 +65,14 @@ Type: `string`
 
 Default: `"Standard_D2as_v6"`
 
+### <a name="input_blob_version_retention_days"></a> [blob\_version\_retention\_days](#input\_blob\_version\_retention\_days)
+
+Description: Number of days to retain blob versions before lifecycle cleanup.
+
+Type: `number`
+
+Default: `14`
+
 ### <a name="input_create_aks_cluster"></a> [create\_aks\_cluster](#input\_create\_aks\_cluster)
 
 Description: Create an AKS cluster
