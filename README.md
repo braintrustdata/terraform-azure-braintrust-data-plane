@@ -10,7 +10,7 @@ This module creates the following resources by default:
 - Azure Key Vault for encryption and secrets management
 - Azure Database for PostgreSQL
 - Azure Cache for Redis
-- Azure Storage Account for blob storage
+- Azure Storage Account for blob storage (blob versioning enabled by default)
 - AKS Kubernetes Cluster
 - Azure Front Door for ingress to the API service
 
