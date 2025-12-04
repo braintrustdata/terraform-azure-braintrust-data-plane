@@ -53,7 +53,7 @@ resource "azurerm_storage_account" "main" {
   public_network_access_enabled     = true
   allow_nested_items_to_be_public   = false
   blob_properties {
-    versioning_enabled  = false
+    versioning_enabled  = true
     change_feed_enabled = false
     cors_rule {
       allowed_headers    = ["*"]
