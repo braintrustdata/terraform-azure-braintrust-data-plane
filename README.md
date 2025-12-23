@@ -2,6 +2,9 @@
 
 This Terraform module deploys the Braintrust data plane on Azure. It creates all the necessary core infrastructure to run Braintrust in your own Azure subscription.
 
+## Architecture Diagram
+
+![Architecture Diagram](assets/aks-arch-diagram-export-12-23-2025.png)
 
 ## Resources
 
