@@ -1,8 +1,18 @@
+locals {
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
+}
+
 resource "azurerm_virtual_network" "main" {
   name                = "${var.deployment_name}-${var.vnet_name}"
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = [var.vnet_address_space_cidr]
+  tags                = local.tags
   lifecycle {
     ignore_changes = [address_space]
   }
@@ -22,6 +32,7 @@ resource "azurerm_network_security_group" "services" {
   name                = "${var.deployment_name}-services-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_subnet_network_security_group_association" "services" {
@@ -48,6 +59,7 @@ resource "azurerm_network_security_group" "private_endpoint" {
   name                = "${var.deployment_name}-private-endpoint-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_subnet" "private_link_service" {
@@ -67,6 +79,7 @@ resource "azurerm_network_security_group" "private_link_service" {
   name                = "${var.deployment_name}-private-link-service-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_subnet_network_security_group_association" "private_link_service" {

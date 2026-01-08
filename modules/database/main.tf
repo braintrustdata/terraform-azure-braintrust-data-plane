@@ -2,6 +2,12 @@ locals {
   db_name    = "${var.deployment_name}-database"
   pg_db_name = "braintrust"
   pg_user    = "postgres"
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
 }
 
 resource "azurerm_postgresql_flexible_server" "main" {
@@ -41,6 +47,8 @@ resource "azurerm_postgresql_flexible_server" "main" {
     identity_ids = [azurerm_user_assigned_identity.main.id]
   }
 
+  tags = local.tags
+
   lifecycle {
     ignore_changes = [
       high_availability[0].standby_availability_zone,
@@ -62,12 +70,14 @@ resource "azurerm_key_vault_secret" "postgres_password" {
   name         = "postgres-password"
   value        = random_password.postgres_password.result
   key_vault_id = var.key_vault_id
+  tags         = local.tags
 }
 
 resource "azurerm_key_vault_secret" "postgres_connection_string" {
   name         = "postgres-connection-string"
   value        = "postgres://${local.pg_user}:${azurerm_key_vault_secret.postgres_password.value}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${local.pg_db_name}?sslmode=require"
   key_vault_id = var.key_vault_id
+  tags         = local.tags
 }
 
 resource "random_password" "postgres_password" {
@@ -80,6 +90,7 @@ resource "azurerm_key_vault_key" "postgres_cmk" {
   key_vault_id = var.key_vault_id
   key_type     = "RSA"
   key_size     = 4096
+  tags         = local.tags
 
   key_opts = [
     "decrypt",
@@ -126,4 +137,3 @@ resource "azurerm_postgresql_flexible_server_configuration" "autovacuum_diagnost
   server_id = azurerm_postgresql_flexible_server.main.id
   value     = "ON"
 }
-

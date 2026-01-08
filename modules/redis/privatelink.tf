@@ -4,6 +4,7 @@ resource "azurerm_private_endpoint" "redis" {
   resource_group_name           = var.resource_group_name
   subnet_id                     = var.private_endpoint_subnet_id
   custom_network_interface_name = "${var.deployment_name}-redis"
+  tags                          = local.tags
 
   private_dns_zone_group {
     name                 = "redis"
@@ -23,6 +24,7 @@ resource "azurerm_private_dns_zone" "redis" {
   count               = var.existing_redis_private_dns_zone_id == "" ? 1 : 0
   name                = "redis.cache.windows.net"
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
@@ -31,11 +33,13 @@ resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
   private_dns_zone_name = azurerm_private_dns_zone.redis[0].name
   virtual_network_id    = var.virtual_network_id
   resource_group_name   = var.resource_group_name
+  tags                  = local.tags
 }
 resource "azurerm_application_security_group" "main_redis_endpoint" {
   name                = "${var.deployment_name}-redis"
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_private_endpoint_application_security_group_association" "main_redis_endpoint" {

@@ -3,6 +3,7 @@ resource "azurerm_user_assigned_identity" "main" {
   name                = "${local.db_name}-identity"
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags                = local.tags
 }
 
 resource "azurerm_role_assignment" "crypto_service_encryption_user" {

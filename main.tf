@@ -4,11 +4,19 @@ locals {
   services_subnet_id             = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
   private_endpoint_subnet_id     = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
   private_link_service_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_link_service_subnet_id : null
+
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
 }
 
 resource "azurerm_resource_group" "main" {
   name     = var.deployment_name
   location = var.location
+  tags     = local.tags
 }
 
 module "kms" {
@@ -20,6 +28,7 @@ module "kms" {
   location                   = var.location
   virtual_network_id         = local.vnet_id
   private_endpoint_subnet_id = local.private_endpoint_subnet_id
+  custom_tags                = var.custom_tags
 }
 
 module "main_vnet" {
@@ -35,6 +44,7 @@ module "main_vnet" {
   services_subnet_cidr         = var.services_subnet_cidr
   private_endpoint_subnet_cidr = var.private_endpoint_subnet_cidr
   enable_front_door            = var.enable_front_door
+  custom_tags                  = var.custom_tags
 }
 
 module "k8s" {
@@ -47,12 +57,15 @@ module "k8s" {
   services_subnet_id        = local.services_subnet_id
   brainstore_pool_vm_size   = var.aks_brainstore_pool_vm_size
   brainstore_pool_max_count = var.aks_brainstore_pool_max_count
+  brainstore_pool_min_count = var.aks_brainstore_pool_min_count
   services_pool_vm_size     = var.aks_services_pool_vm_size
   services_pool_max_count   = var.aks_services_pool_max_count
+  services_pool_min_count   = var.aks_services_pool_min_count
   system_pool_vm_size       = var.aks_system_pool_vm_size
   location                  = var.location
   key_vault_id              = local.key_vault_id
   storage_account_id        = module.storage.storage_account_id
+  custom_tags               = var.custom_tags
 }
 
 module "database" {
@@ -72,6 +85,7 @@ module "database" {
   key_vault_id               = local.key_vault_id
 
   existing_postgres_private_dns_zone_id = var.existing_postgres_private_dns_zone_id
+  custom_tags                           = var.custom_tags
 }
 
 module "redis" {
@@ -91,6 +105,7 @@ module "redis" {
   key_vault_id               = local.key_vault_id
 
   existing_redis_private_dns_zone_id = var.existing_redis_private_dns_zone_id
+  custom_tags                        = var.custom_tags
 }
 
 module "storage" {
@@ -105,6 +120,7 @@ module "storage" {
   create_storage_container   = var.create_storage_container
 
   existing_blob_private_dns_zone_id = var.existing_blob_private_dns_zone_id
+  custom_tags                       = var.custom_tags
 }
 
 module "front_door" {
@@ -118,6 +134,7 @@ module "front_door" {
   api_backend_port                    = var.front_door_api_backend_port
   load_balancer_frontend_ip_config_id = var.front_door_load_balancer_frontend_ip_config_id
   private_link_service_subnet_id      = local.private_link_service_subnet_id
+  custom_tags                         = var.custom_tags
 }
 
 # Used for encrypting function env secrets. Function environment secrets can be specified
@@ -126,6 +143,7 @@ resource "azurerm_key_vault_secret" "function_secret" {
   name         = "function-secret-key"
   value        = random_password.function_secret.result
   key_vault_id = local.key_vault_id
+  tags         = local.tags
 }
 
 resource "random_password" "function_secret" {
@@ -137,6 +155,7 @@ resource "azurerm_key_vault_secret" "brainstore_license_key" {
   name         = "brainstore-license-key"
   value        = var.brainstore_license_key
   key_vault_id = local.key_vault_id
+  tags         = local.tags
   # This is required because some customers can't support including secrets in CI
   # This lets them use "" and then later manually enter the secret directly into the key vault
   # If this ever needs to change it can be done by tainting the resource

@@ -22,6 +22,12 @@ variable "location" {
   description = "Azure region to deploy resources to"
 }
 
+variable "custom_tags" {
+  type        = map(string)
+  description = "Additional tags to apply to all resources. These will be merged with the BraintrustDeploymentName tag."
+  default     = {}
+}
+
 variable "key_vault_id" {
   description = "Existing Key Vault ID to use for encrypting resources. If not provided, a new Key Vault will be created. DO NOT change this after deployment."
   type        = string
@@ -119,6 +125,12 @@ variable "aks_brainstore_pool_max_count" {
   default     = 10
 }
 
+variable "aks_brainstore_pool_min_count" {
+  description = "Minimum number of nodes in the brainstore pool"
+  type        = number
+  default     = 2
+}
+
 variable "aks_services_pool_vm_size" {
   description = "VM size for the services node pool. Must be a SKU with a temporary local storage SSD."
   type        = string
@@ -129,6 +141,12 @@ variable "aks_services_pool_max_count" {
   description = "Maximum number of nodes in the services pool"
   type        = number
   default     = 10
+}
+
+variable "aks_services_pool_min_count" {
+  description = "Minimum number of nodes in the services pool"
+  type        = number
+  default     = 2
 }
 
 

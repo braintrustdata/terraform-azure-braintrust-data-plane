@@ -33,3 +33,9 @@ variable "private_link_service_subnet_id" {
   type        = string
   description = "Subnet ID for the Private Link Service NAT IP configuration"
 }
+
+variable "custom_tags" {
+  type        = map(string)
+  description = "Additional tags to apply to all resources"
+  default     = {}
+}
