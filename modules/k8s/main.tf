@@ -1,11 +1,18 @@
 locals {
   cluster_name = "${var.deployment_name}-${var.cluster_name}"
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
 }
 
 resource "azurerm_user_assigned_identity" "aks_identity" {
   resource_group_name = var.resource_group_name
   location            = var.location
   name                = "${local.cluster_name}-identity"
+  tags                = local.tags
 }
 
 resource "azurerm_role_assignment" "aks_identity" {
@@ -32,6 +39,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   sku_tier = "Standard"
+  tags     = local.tags
   default_node_pool {
     name                 = "nodepool"
     vm_size              = var.system_pool_vm_size
@@ -94,12 +102,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "brainstore" {
   kubelet_disk_type           = "OS"
   name                        = "brainstore"
   mode                        = "User"
-  min_count                   = 2
+  min_count                   = var.brainstore_pool_min_count
   max_count                   = var.brainstore_pool_max_count
-  node_count                  = 2
+  node_count                  = var.brainstore_pool_min_count
   vm_size                     = var.brainstore_pool_vm_size
   vnet_subnet_id              = var.services_subnet_id
   temporary_name_for_rotation = "bstorerotate"
+  tags                        = local.tags
   upgrade_settings {
     drain_timeout_in_minutes      = 0
     max_surge                     = "10%"
@@ -119,12 +128,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "services" {
   kubelet_disk_type           = "OS"
   name                        = "services"
   mode                        = "User"
-  min_count                   = 2
+  min_count                   = var.services_pool_min_count
   max_count                   = var.services_pool_max_count
-  node_count                  = 2
+  node_count                  = var.services_pool_min_count
   vm_size                     = var.services_pool_vm_size
   vnet_subnet_id              = var.services_subnet_id
   temporary_name_for_rotation = "svcsrotate"
+  tags                        = local.tags
   upgrade_settings {
     drain_timeout_in_minutes      = 0
     max_surge                     = "10%"
@@ -147,6 +157,7 @@ resource "azurerm_user_assigned_identity" "braintrust_service_account" {
   name                = "${local.cluster_name}-braintrust-sa"
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_role_assignment" "braintrust_key_vault" {

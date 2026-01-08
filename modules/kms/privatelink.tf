@@ -3,6 +3,7 @@ resource "azurerm_private_endpoint" "key_vault" {
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.private_endpoint_subnet_id
+  tags                = local.tags
 
   private_service_connection {
     name                           = "${var.deployment_name}-kv-psc"
@@ -20,6 +21,7 @@ resource "azurerm_private_endpoint" "key_vault" {
 resource "azurerm_private_dns_zone" "key_vault" {
   name                = "privatelink.vaultcore.azure.net"
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "key_vault" {
@@ -27,12 +29,14 @@ resource "azurerm_private_dns_zone_virtual_network_link" "key_vault" {
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.key_vault.name
   virtual_network_id    = var.virtual_network_id
+  tags                  = local.tags
 }
 
 resource "azurerm_application_security_group" "main_kv_endpoint" {
   name                = "${var.deployment_name}-kv"
   location            = var.location
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_private_endpoint_application_security_group_association" "main_kv_endpoint" {

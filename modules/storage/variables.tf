@@ -39,3 +39,9 @@ variable "existing_blob_private_dns_zone_id" {
   type        = string
   default     = ""
 }
+
+variable "custom_tags" {
+  type        = map(string)
+  description = "Additional tags to apply to all resources"
+  default     = {}
+}

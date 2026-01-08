@@ -5,6 +5,12 @@ locals {
   key_name                        = "${var.deployment_name}-storage-key"
   private_dns_zone_name           = "privatelink.blob.core.windows.net"
   azure_storage_connection_string = "BlobEndpoint=${azurerm_storage_account.main.primary_blob_endpoint};"
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
 }
 
 resource "random_string" "storage_account_suffix" {
@@ -19,12 +25,14 @@ resource "azurerm_key_vault_key" "storage" {
   key_type     = "RSA"
   key_size     = 4096
   key_opts     = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
+  tags         = local.tags
 }
 
 resource "azurerm_user_assigned_identity" "storage" {
   name                = "${var.deployment_name}-${local.storage_account_name}-id"
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags                = local.tags
 }
 
 resource "azurerm_role_assignment" "storage_cmk" {
@@ -74,6 +82,8 @@ resource "azurerm_storage_account" "main" {
     user_assigned_identity_id = azurerm_user_assigned_identity.storage.id
   }
 
+  tags = local.tags
+
 }
 
 resource "azurerm_storage_container" "brainstore" {
@@ -104,6 +114,7 @@ resource "azurerm_private_dns_zone" "blob" {
   count               = var.existing_blob_private_dns_zone_id == "" ? 1 : 0
   name                = local.private_dns_zone_name
   resource_group_name = var.resource_group_name
+  tags                = local.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
@@ -112,6 +123,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.blob[0].name
   virtual_network_id    = var.vnet_id
+  tags                  = local.tags
 }
 
 resource "azurerm_private_endpoint" "storage" {
@@ -119,6 +131,7 @@ resource "azurerm_private_endpoint" "storage" {
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.private_endpoint_subnet_id
+  tags                = local.tags
 
   private_service_connection {
     name                           = "${local.storage_account_name}-connection"
@@ -144,5 +157,5 @@ resource "azurerm_key_vault_secret" "azure-storage-connection-string" {
   name         = "azure-storage-connection-string"
   value        = local.azure_storage_connection_string
   key_vault_id = var.key_vault_id
+  tags         = local.tags
 }
-

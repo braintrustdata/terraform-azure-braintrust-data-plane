@@ -67,3 +67,9 @@ variable "enable_front_door" {
   description = "Enable Private Link Service subnet (required for Azure Front Door)"
   default     = false
 }
+
+variable "custom_tags" {
+  type        = map(string)
+  description = "Additional tags to apply to all resources"
+  default     = {}
+}

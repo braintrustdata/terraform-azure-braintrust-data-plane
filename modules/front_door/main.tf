@@ -1,3 +1,12 @@
+locals {
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
+}
+
 resource "azurerm_private_link_service" "aks_api" {
   name                = "${var.deployment_name}-aks-api-pls"
   resource_group_name = var.resource_group_name
@@ -12,17 +21,21 @@ resource "azurerm_private_link_service" "aks_api" {
   load_balancer_frontend_ip_configuration_ids = [
     var.load_balancer_frontend_ip_config_id
   ]
+
+  tags = local.tags
 }
 
 resource "azurerm_cdn_frontdoor_profile" "main" {
   name                = "${var.deployment_name}-afd"
   resource_group_name = var.resource_group_name
   sku_name            = "Premium_AzureFrontDoor"
+  tags                = local.tags
 }
 
 resource "azurerm_cdn_frontdoor_endpoint" "api" {
   name                     = "${var.deployment_name}-api-endpoint"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.main.id
+  tags                     = local.tags
 }
 
 resource "azurerm_cdn_frontdoor_origin_group" "api" {

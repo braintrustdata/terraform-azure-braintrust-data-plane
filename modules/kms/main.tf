@@ -1,3 +1,12 @@
+locals {
+  tags = merge(
+    {
+      BraintrustDeploymentName = var.deployment_name
+    },
+    var.custom_tags
+  )
+}
+
 resource "azurerm_key_vault" "main" {
   name                = "${var.deployment_name}-kv"
   location            = var.location
@@ -13,9 +22,7 @@ resource "azurerm_key_vault" "main" {
   public_network_access_enabled = true
   rbac_authorization_enabled    = true
 
-  tags = {
-    deployment = var.deployment_name
-  }
+  tags = local.tags
 }
 
 data "azurerm_client_config" "current" {}

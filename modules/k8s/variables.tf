@@ -36,6 +36,12 @@ variable "brainstore_pool_max_count" {
   default     = 10
 }
 
+variable "brainstore_pool_min_count" {
+  description = "Minimum number of nodes in the brainstore pool"
+  type        = number
+  default     = 2
+}
+
 variable "services_pool_vm_size" {
   description = "VM size for the services node pool"
   type        = string
@@ -46,6 +52,12 @@ variable "services_pool_max_count" {
   description = "Maximum number of nodes in the services pool"
   type        = number
   default     = 10
+}
+
+variable "services_pool_min_count" {
+  description = "Minimum number of nodes in the services pool"
+  type        = number
+  default     = 2
 }
 
 variable "services_subnet_id" {
@@ -69,3 +81,8 @@ variable "storage_account_id" {
   type        = string
 }
 
+variable "custom_tags" {
+  type        = map(string)
+  description = "Additional tags to apply to all resources"
+  default     = {}
+}
