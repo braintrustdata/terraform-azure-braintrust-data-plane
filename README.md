@@ -28,6 +28,7 @@ cp -r terraform-azure-braintrust-data-plane/examples/default <path-in-your-git-r
 * `provider.tf` should be modified to use your Azure subscription and tenant.
 * `terraform.tf` should be modified to use the remote backend that your company uses. Typically this is an Azure Blob Storage.
 * `main.tf` should be modified to match your environment and needs. It is preconfigured for a production-sized deployment.
+  * Optional: If you want to deploy into an existing resource group, set `existing_resource_group_name`. When set, the module will not create a resource group.
 * Set `brainstore_license_key` in `main.tf` to your Braintrust License Key. It isn't recommended that you commit this license key to your git repo. You can safely pass this key into terraform multiple ways:
   * Store it in an Azure Key Vault and use the azurerm_key_vault_secret to lookup the value
   * Set TF_VAR_brainstore_license_key=your-key in your terraform environment

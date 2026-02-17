@@ -4,6 +4,8 @@ locals {
   services_subnet_id             = var.existing_vnet.id == "" ? module.main_vnet[0].services_subnet_id : var.existing_vnet.services_subnet_id
   private_endpoint_subnet_id     = var.existing_vnet.id == "" ? module.main_vnet[0].private_endpoint_subnet_id : var.existing_vnet.private_endpoint_subnet_id
   private_link_service_subnet_id = var.existing_vnet.id == "" ? module.main_vnet[0].private_link_service_subnet_id : null
+  resource_group_name            = var.existing_resource_group_name == "" ? azurerm_resource_group.main[0].name : data.azurerm_resource_group.existing[0].name
+  resource_group_id              = var.existing_resource_group_name == "" ? azurerm_resource_group.main[0].id : data.azurerm_resource_group.existing[0].id
 
   tags = merge(
     {
@@ -13,7 +15,14 @@ locals {
   )
 }
 
+data "azurerm_resource_group" "existing" {
+  count = var.existing_resource_group_name != "" ? 1 : 0
+  name  = var.existing_resource_group_name
+}
+
 resource "azurerm_resource_group" "main" {
+  count = var.existing_resource_group_name == "" ? 1 : 0
+
   name     = var.deployment_name
   location = var.location
   tags     = local.tags
@@ -24,7 +33,7 @@ module "kms" {
   count  = var.key_vault_id == null ? 1 : 0
 
   deployment_name            = var.deployment_name
-  resource_group_name        = azurerm_resource_group.main.name
+  resource_group_name        = local.resource_group_name
   location                   = var.location
   virtual_network_id         = local.vnet_id
   private_endpoint_subnet_id = local.private_endpoint_subnet_id
@@ -36,7 +45,7 @@ module "main_vnet" {
   count  = var.existing_vnet.id == "" ? 1 : 0
 
   deployment_name     = var.deployment_name
-  resource_group_name = azurerm_resource_group.main.name
+  resource_group_name = local.resource_group_name
   location            = var.location
 
   vnet_name                    = "main"
@@ -52,8 +61,8 @@ module "k8s" {
   count  = var.create_aks_cluster ? 1 : 0
 
   deployment_name           = var.deployment_name
-  resource_group_name       = azurerm_resource_group.main.name
-  resource_group_id         = azurerm_resource_group.main.id
+  resource_group_name       = local.resource_group_name
+  resource_group_id         = local.resource_group_id
   services_subnet_id        = local.services_subnet_id
   brainstore_pool_vm_size   = var.aks_brainstore_pool_vm_size
   brainstore_pool_max_count = var.aks_brainstore_pool_max_count
@@ -72,7 +81,7 @@ module "database" {
   source = "./modules/database"
 
   deployment_name     = var.deployment_name
-  resource_group_name = azurerm_resource_group.main.name
+  resource_group_name = local.resource_group_name
   location            = var.location
 
   postgres_sku_name     = var.postgres_sku_name
@@ -92,7 +101,7 @@ module "redis" {
   source = "./modules/redis"
 
   deployment_name     = var.deployment_name
-  resource_group_name = azurerm_resource_group.main.name
+  resource_group_name = local.resource_group_name
   location            = var.location
 
   redis_sku_name = var.redis_sku_name
@@ -111,7 +120,7 @@ module "redis" {
 module "storage" {
   source = "./modules/storage"
 
-  resource_group_name        = azurerm_resource_group.main.name
+  resource_group_name        = local.resource_group_name
   deployment_name            = var.deployment_name
   location                   = var.location
   vnet_id                    = local.vnet_id
@@ -127,7 +136,7 @@ module "front_door" {
   source = "./modules/front_door"
   count  = var.enable_front_door ? 1 : 0
 
-  resource_group_name                 = azurerm_resource_group.main.name
+  resource_group_name                 = local.resource_group_name
   deployment_name                     = var.deployment_name
   location                            = var.location
   api_backend_address                 = var.front_door_api_backend_address
