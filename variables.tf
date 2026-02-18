@@ -22,6 +22,17 @@ variable "location" {
   description = "Azure region to deploy resources to"
 }
 
+variable "existing_resource_group_name" {
+  description = "Use an existing resource group instead of creating a new one."
+
+  type    = string
+  default = ""
+  validation {
+    condition     = var.existing_resource_group_name == "" || !can(regex("/", var.existing_resource_group_name))
+    error_message = "The existing_resource_group_name must be a resource group name, not a resource group ID. Please provide only the name (e.g., 'my-resource-group'), not the full path (e.g., '/subscriptions/.../resourceGroups/...')."
+  }
+}
+
 variable "custom_tags" {
   type        = map(string)
   description = "Additional tags to apply to all resources. These will be merged with the BraintrustDeploymentName tag."

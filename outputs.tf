@@ -1,5 +1,5 @@
 output "resource_group_name" {
-  value       = azurerm_resource_group.main.name
+  value       = local.resource_group_name
   description = "Name of the resource group containing Braintrust resources"
 }
 
@@ -223,4 +223,3 @@ output "private_link_service_id" {
   value       = var.enable_front_door ? module.front_door[0].private_link_service_id : null
   description = "The ID of the Private Link Service"
 }
-

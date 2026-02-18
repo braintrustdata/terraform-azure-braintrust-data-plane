@@ -13,6 +13,9 @@ module "braintrust" {
   # Azure region to deploy resources to
   location = "eastus2"
 
+  # Optional: Use an existing resource group instead of creating one.
+  # existing_resource_group_name = "<resource-group-name>"
+
   # Add your organization name from the Braintrust UI here
   braintrust_org_name = ""
 
