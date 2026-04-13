@@ -55,6 +55,19 @@ kubectl get nodes
 ### 5. Configure Helm Values
 Review the Helm [README.md](https://github.com/braintrustdata/helm/tree/main/braintrust) and [`values.yaml`](https://github.com/braintrustdata/helm/blob/main/braintrust/values.yaml). Create your own `helm-values.yaml` file with your own overrides as needed.
 
+Use the Terraform outputs to populate the Helm chart's Azure object storage configuration. Run `terraform output helm_object_storage_values` to get the values:
+
+```yaml
+cloud: "azure"
+
+objectStorage:
+  azure:
+    storageAccountName: "<from terraform output>"
+    brainstoreContainer: "<from terraform output>"
+    responseContainer: "<from terraform output>"
+    codeBundleContainer: "<from terraform output>"
+```
+
 Set the `api` service to `LoadBalancer` type and set the `annotations` to create an internal load balancer for the API service.
 
 ```yaml
