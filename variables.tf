@@ -45,14 +45,12 @@ variable "key_vault_id" {
   default     = null
 }
 
-
 variable "brainstore_license_key" {
   type        = string
   description = "The license key for the Brainstore instance. You can find this in the Braintrust UI under Settings > Data Plane > Brainstore License Key."
 }
 
 ## NETWORKING
-
 variable "existing_vnet" {
   type = object({
     id                                         = string
@@ -72,7 +70,6 @@ variable "existing_vnet" {
   }
 }
 
-
 variable "vnet_address_space_cidr" {
   type        = string
   description = "Address space for the VNet"
@@ -91,7 +88,6 @@ variable "private_endpoint_subnet_cidr" {
   default     = null
 }
 
-
 variable "existing_postgres_private_dns_zone_id" {
   description = "Advanced: Use an existing private dns zone id for postgres private endpoint. Only needed if you want to deploy two data planes into the same VNet."
   type        = string
@@ -109,7 +105,6 @@ variable "existing_redis_private_dns_zone_id" {
   type        = string
   default     = ""
 }
-
 
 ## AKS
 variable "create_aks_cluster" {
@@ -160,7 +155,6 @@ variable "aks_services_pool_min_count" {
   type        = number
   default     = 2
 }
-
 
 ## Database
 variable "postgres_sku_name" {
