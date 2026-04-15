@@ -23,11 +23,6 @@ variable "virtual_network_id" {
   description = "ID of the virtual network to link with the private DNS zone"
 }
 
-variable "purge_protection_enabled" {
-  type        = bool
-  description = "Enable purge protection on the Key Vault. When enabled, deleted vaults cannot be purged during the retention period."
-  default     = true
-}
 
 variable "custom_tags" {
   type        = map(string)

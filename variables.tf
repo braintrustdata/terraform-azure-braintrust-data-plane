@@ -45,11 +45,6 @@ variable "key_vault_id" {
   default     = null
 }
 
-variable "key_vault_purge_protection" {
-  description = "Enable purge protection on the Key Vault. When enabled, deleted vaults cannot be purged during the retention period (7 days). Recommended for production. Disable for sandbox/dev environments to allow clean teardown and redeployment."
-  type        = bool
-  default     = true
-}
 
 variable "brainstore_license_key" {
   type        = string

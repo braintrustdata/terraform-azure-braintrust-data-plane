@@ -186,16 +186,16 @@ resource "azurerm_federated_identity_credential" "braintrust_api" {
   name      = "${local.cluster_name}-braintrust-api"
   audience  = ["api://AzureADTokenExchange"]
   issuer    = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  parent_id = azurerm_user_assigned_identity.braintrust_service_account.id
-  subject   = "system:serviceaccount:braintrust:braintrust-api"
+  user_assigned_identity_id = azurerm_user_assigned_identity.braintrust_service_account.id
+  subject                   = "system:serviceaccount:braintrust:braintrust-api"
 }
 
 resource "azurerm_federated_identity_credential" "brainstore" {
-  name      = "${local.cluster_name}-brainstore"
-  audience  = ["api://AzureADTokenExchange"]
-  issuer    = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  parent_id = azurerm_user_assigned_identity.braintrust_service_account.id
-  subject   = "system:serviceaccount:braintrust:brainstore"
+  name                      = "${local.cluster_name}-brainstore"
+  audience                  = ["api://AzureADTokenExchange"]
+  issuer                    = azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  user_assigned_identity_id = azurerm_user_assigned_identity.braintrust_service_account.id
+  subject                   = "system:serviceaccount:braintrust:brainstore"
 }
 
 # Uncommenting these plus the private_* ones in the k8s cluster above makes the cluster private.
