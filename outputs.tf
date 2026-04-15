@@ -136,10 +136,10 @@ output "code_bundles_container_name" {
 output "helm_object_storage_values" {
   description = "Convenience output: objectStorage values for the Helm chart's values.yaml"
   value = {
-    storageAccountName   = module.storage.storage_account_name
-    brainstoreContainer  = module.storage.brainstore_container_name
-    responseContainer    = module.storage.responses_container_name
-    codeBundleContainer  = module.storage.code_bundles_container_name
+    storageAccountName  = module.storage.storage_account_name
+    brainstoreContainer = module.storage.brainstore_container_name
+    responseContainer   = module.storage.responses_container_name
+    codeBundleContainer = module.storage.code_bundles_container_name
   }
 }
 

@@ -37,6 +37,7 @@ module "kms" {
   location                   = var.location
   virtual_network_id         = local.vnet_id
   private_endpoint_subnet_id = local.private_endpoint_subnet_id
+  purge_protection_enabled   = var.key_vault_purge_protection
   custom_tags                = var.custom_tags
 }
 

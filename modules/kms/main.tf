@@ -17,7 +17,7 @@ resource "azurerm_key_vault" "main" {
 
   enabled_for_disk_encryption = true
   soft_delete_retention_days  = 7
-  purge_protection_enabled    = true
+  purge_protection_enabled    = var.purge_protection_enabled
   # Required for Terraform to work. Also, the default.
   public_network_access_enabled = true
   rbac_authorization_enabled    = true
