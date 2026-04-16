@@ -45,6 +45,20 @@ terraform apply
 
 Deployment takes approximately **15-20 minutes**.
 
+### 3.1. Restart PostgreSQL (first deploy only)
+
+The Terraform module configures PostgreSQL static parameters (`shared_preload_libraries`, `cron.database_name`) that require a server restart to take effect. The Azure provider does not restart the server automatically to avoid unintended downtime on subsequent applies.
+
+After the **first** `terraform apply`, restart the server:
+
+```bash
+az postgres flexible-server restart \
+  --resource-group <resource-group-name> \
+  --name <database-server-name>
+```
+
+> This is only required on initial deployment. Subsequent applies do not need a restart unless you modify PostgreSQL extension configuration.
+
 ### 4. Connect to your AKS cluster
 
 ```bash
@@ -54,6 +68,19 @@ kubectl get nodes
 
 ### 5. Configure Helm Values
 Review the Helm [README.md](https://github.com/braintrustdata/helm/tree/main/braintrust) and [`values.yaml`](https://github.com/braintrustdata/helm/blob/main/braintrust/values.yaml). Create your own `helm-values.yaml` file with your own overrides as needed.
+
+Use the Terraform outputs to populate the Helm chart's Azure object storage configuration. Run `terraform output helm_object_storage_values` to get the values:
+
+```yaml
+cloud: "azure"
+
+objectStorage:
+  azure:
+    storageAccountName: "<from terraform output>"
+    brainstoreContainer: "<from terraform output>"
+    responseContainer: "<from terraform output>"
+    codeBundleContainer: "<from terraform output>"
+```
 
 Set the `api` service to `LoadBalancer` type and set the `annotations` to create an internal load balancer for the API service.
 

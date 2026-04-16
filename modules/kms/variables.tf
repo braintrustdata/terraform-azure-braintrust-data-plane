@@ -23,6 +23,7 @@ variable "virtual_network_id" {
   description = "ID of the virtual network to link with the private DNS zone"
 }
 
+
 variable "custom_tags" {
   type        = map(string)
   description = "Additional tags to apply to all resources"
