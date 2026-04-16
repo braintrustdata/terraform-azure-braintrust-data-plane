@@ -45,6 +45,20 @@ terraform apply
 
 Deployment takes approximately **15-20 minutes**.
 
+### 3.1. Restart PostgreSQL (first deploy only)
+
+The Terraform module configures PostgreSQL static parameters (`shared_preload_libraries`, `cron.database_name`) that require a server restart to take effect. The Azure provider does not restart the server automatically to avoid unintended downtime on subsequent applies.
+
+After the **first** `terraform apply`, restart the server:
+
+```bash
+az postgres flexible-server restart \
+  --resource-group <resource-group-name> \
+  --name <database-server-name>
+```
+
+> This is only required on initial deployment. Subsequent applies do not need a restart unless you modify PostgreSQL extension configuration.
+
 ### 4. Connect to your AKS cluster
 
 ```bash
