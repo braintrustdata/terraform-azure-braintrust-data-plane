@@ -143,6 +143,21 @@ output "helm_object_storage_values" {
   }
 }
 
+output "helm_api_unsafe_url_request_mode" {
+  description = "Value for api.unsafeUrlRequestMode in the Helm chart. Null means omit the setting and use the application default of warn."
+  value       = trimspace(var.unsafe_url_request_mode) == "" ? null : trimspace(var.unsafe_url_request_mode)
+}
+
+output "helm_api_url_security_dns_servers" {
+  description = "Value for api.urlSecurityDnsServers in the Helm chart. Null means omit the setting and use the application default resolver behavior."
+  value       = trimspace(var.url_security_dns_servers) == "" ? null : trimspace(var.url_security_dns_servers)
+}
+
+output "helm_api_url_security_allow_cidrs" {
+  description = "Value for api.urlSecurityAllowCidrs in the Helm chart. Null means omit the setting and use the application default CIDR policy."
+  value       = trimspace(var.url_security_allow_cidrs) == "" ? null : trimspace(var.url_security_allow_cidrs)
+}
+
 output "storage_identity_id" {
   value       = module.storage.storage_identity_id
   description = "The ID of the user-assigned managed identity used by the storage account"

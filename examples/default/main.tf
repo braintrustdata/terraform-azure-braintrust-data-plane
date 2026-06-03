@@ -38,6 +38,13 @@ module "braintrust" {
   redis_version  = "6"
 
 
+  ### Optional Braintrust backend arbitrary-URL request security configuration
+  # Leave unset/empty to use Braintrust application defaults (unsafe URL request mode defaults to warn).
+  # unsafe_url_request_mode  = "reject"
+  # url_security_dns_servers = "1.1.1.1,8.8.8.8"
+  # url_security_allow_cidrs = "10.0.0.0/8,192.168.0.0/16"
+
+
   ### AKS configuration
   create_aks_cluster            = true
   aks_brainstore_pool_vm_size   = "Standard_D32ds_v6" # 32 core, 128GB memory, 1700Gi storage

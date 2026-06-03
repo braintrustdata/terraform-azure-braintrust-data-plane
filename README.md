@@ -82,6 +82,17 @@ objectStorage:
     codeBundleContainer: "<from terraform output>"
 ```
 
+Optional Braintrust backend arbitrary-URL request security settings can also be configured through Terraform variables. If the matching Terraform output is non-null, set the corresponding value under `api` in `helm-values.yaml`:
+
+```yaml
+api:
+  unsafeUrlRequestMode: "<from terraform output helm_api_unsafe_url_request_mode>"
+  urlSecurityDnsServers: "<from terraform output helm_api_url_security_dns_servers>"
+  urlSecurityAllowCidrs: "<from terraform output helm_api_url_security_allow_cidrs>"
+```
+
+Leave these settings unset or empty to omit the corresponding Helm values. `unsafeUrlRequestMode` then uses the application default of `warn`.
+
 Set the `api` service to `LoadBalancer` type and set the `annotations` to create an internal load balancer for the API service.
 
 ```yaml
