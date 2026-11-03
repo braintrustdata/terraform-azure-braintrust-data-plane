@@ -23,6 +23,7 @@ module "braintrust" {
   brainstore_license_key = var.brainstore_license_key
 
   ### Postgres configuration
+  postgres_version = "17"
   # Postgres Compute: https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-compute
   # Postgres Storage: https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-storage
   postgres_sku_name     = "MO_Standard_E16ds_v4" # 16 core, 128GB memory, 25600 Max IOPS, 384MiB/s Max Throughput

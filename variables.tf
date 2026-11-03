@@ -178,7 +178,7 @@ variable "postgres_storage_tier" {
 variable "postgres_version" {
   description = "PostgreSQL engine version for the Azure Database for PostgreSQL instance."
   type        = string
-  default     = "15"
+  default     = "17"
 }
 
 ## Redis

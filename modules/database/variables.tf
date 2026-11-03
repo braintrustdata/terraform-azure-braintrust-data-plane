@@ -35,7 +35,7 @@ variable "postgres_storage_mb" {
 variable "postgres_version" {
   description = "PostgreSQL engine version for the Azure Database for PostgreSQL instance."
   type        = string
-  default     = "16"
+  default     = "17"
 }
 
 variable "vnet_id" {
