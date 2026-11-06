@@ -3,6 +3,14 @@
 This Terraform module deploys the Braintrust data plane on Azure. It creates all the necessary core infrastructure to run Braintrust in your own Azure subscription.
 
 
+## Managed BYOC v2 design preview
+
+Review the proposed Azure deployment and access model in
+[managed-byoc-v2](managed-byoc-v2/README.md). This architecture preview prefers
+PIM scheduling for temporary Diagnostics access and keeps ordinary RBAC as an
+alternative. It does not change the module's infrastructure or provide an
+installable managed-access bootstrap.
+
 ## Resources
 
 This module creates the following resources by default:
